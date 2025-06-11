@@ -1,14 +1,31 @@
 package com.NeoCamp.Desafio_Futebol.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 public class PartidaRequestDto {
+
+    @NotNull
     private Long clubeMandanteId;
+
+    @NotNull
     private Long clubeVisitanteId;
+
+    @NotNull
     private Long estadioId;
+
+    @NotNull
     private LocalDateTime dataHoraPartida;
-    private int golsMandante;
-    private int golsVisitante;
+
+    @NotNull
+    @Min(0)
+    private Integer golsMandante;
+
+    @NotNull
+    @Min(0)
+    private Integer golsVisitante;
 
     public PartidaRequestDto() {}
 

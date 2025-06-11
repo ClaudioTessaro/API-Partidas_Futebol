@@ -1,8 +1,12 @@
 package com.NeoCamp.Desafio_Futebol.dto;
 
-import com.NeoCamp.Desafio_Futebol.entity.Estadio;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class EstadioRequestDto {
+
+    @NotBlank
+    @Size(min= 3, max = 100)
     private String nome;
 
     public EstadioRequestDto() {}
