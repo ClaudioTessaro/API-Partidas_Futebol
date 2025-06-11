@@ -30,7 +30,7 @@ public class PartidaRequestDto {
     public PartidaRequestDto() {}
 
     public PartidaRequestDto(Long clubeMandanteId, Long clubeVisitanteId, Long estadioId,
-                             LocalDateTime dataHoraPartida, int golsMandante, int golsVisitante) {
+                             LocalDateTime dataHoraPartida, Integer golsMandante, Integer golsVisitante) {
         this.clubeMandanteId = clubeMandanteId;
         this.clubeVisitanteId = clubeVisitanteId;
         this.estadioId = estadioId;
@@ -71,19 +71,19 @@ public class PartidaRequestDto {
         this.dataHoraPartida = dataHoraPartida;
     }
 
-    public int getGolsMandante() {
+    public Integer getGolsMandante() {
         return golsMandante;
     }
 
-    public void setGolsMandante(int golsMandante) {
+    public void setGolsMandante(Integer golsMandante) {
         this.golsMandante = golsMandante;
     }
 
-    public int getGolsVisitante() {
+    public Integer getGolsVisitante() {
         return golsVisitante;
     }
 
-    public void setGolsVisitante(int golsVisitante) {
+    public void setGolsVisitante(Integer golsVisitante) {
         this.golsVisitante = golsVisitante;
     }
 }

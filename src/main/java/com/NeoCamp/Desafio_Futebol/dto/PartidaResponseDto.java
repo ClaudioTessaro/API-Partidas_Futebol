@@ -10,8 +10,8 @@ public class PartidaResponseDto {
     private EstadioResponseDto estadio;
     private ClubeResponseDto clubeMandante;
     private ClubeResponseDto clubeVisitante;
-    private int golsMandante;
-    private int golsVisitante;
+    private Integer golsMandante;
+    private Integer golsVisitante;
 
     public PartidaResponseDto() {}
 
@@ -33,19 +33,19 @@ public class PartidaResponseDto {
         this.id = id;
     }
 
-    public int getGolsVisitante() {
+    public Integer getGolsVisitante() {
         return golsVisitante;
     }
 
-    public void setGolsVisitante(int golsVisitante) {
+    public void setGolsVisitante(Integer golsVisitante) {
         this.golsVisitante = golsVisitante;
     }
 
-    public int getGolsMandante() {
+    public Integer getGolsMandante() {
         return golsMandante;
     }
 
-    public void setGolsMandante(int golsMandante) {
+    public void setGolsMandante(Integer golsMandante) {
         this.golsMandante = golsMandante;
     }
 
