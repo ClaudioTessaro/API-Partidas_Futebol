@@ -58,6 +58,14 @@ public class ClubeService {
         return ClubeMapper.toDto(clubeAtualizado);
     }
 
+    public ClubeResponseDto delete(Long id) {
+        Clube clube = findEntidadeById(id);
+        clube.setAtivo(false);
+        Clube clubeAtualizado = clubeRepository.save(clube);
+
+        return ClubeMapper.toDto(clubeAtualizado);
+    }
+
     private void validarSiglaEstado(String sigla) {
         try {
             SiglaEstado.valueOf(sigla.toUpperCase());
