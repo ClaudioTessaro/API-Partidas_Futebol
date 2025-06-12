@@ -21,8 +21,9 @@ public class ClubeController {
     }
 
     @GetMapping
-    public Page<ClubeResponseDto>findAll(Pageable pageable) {
-        return clubeService.findAll(pageable);
+    public ResponseEntity<Page<ClubeResponseDto>> findAll(Pageable pageable) {
+        Page<ClubeResponseDto> clubes = clubeService.findAll(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(clubes);
     }
 
     @GetMapping("/{id}")
