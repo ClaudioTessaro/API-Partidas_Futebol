@@ -16,9 +16,9 @@ public class ClubeResponseDto {
     public ClubeResponseDto(Clube clube) {
         this.id = clube.getId();
         this.nome = clube.getNome();
+        this.estadoSede = new EstadoResponseDto(clube.getEstadoSede());
         this.dataCriacao = clube.getDataCriacao();
         this.ativo = clube.isAtivo();
-        this.estadoSede = new EstadoResponseDto(clube.getEstadoSede());
     }
 
     public Long getId() {

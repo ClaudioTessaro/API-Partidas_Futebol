@@ -25,7 +25,7 @@ public class ClubeRequestDto {
 
     public ClubeRequestDto(String nome, String siglaEstado, LocalDate dataCriacao, boolean ativo) {
         this.nome = nome;
-       this.siglaEstado = siglaEstado;
+        this.siglaEstado = siglaEstado;
         this.dataCriacao = dataCriacao;
         this.ativo = ativo;
     }
