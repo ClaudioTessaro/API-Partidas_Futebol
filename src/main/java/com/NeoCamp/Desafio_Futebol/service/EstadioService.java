@@ -1,6 +1,5 @@
 package com.NeoCamp.Desafio_Futebol.service;
 
-import com.NeoCamp.Desafio_Futebol.dto.ClubeResponseDto;
 import com.NeoCamp.Desafio_Futebol.dto.EstadioRequestDto;
 import com.NeoCamp.Desafio_Futebol.dto.EstadioResponseDto;
 import com.NeoCamp.Desafio_Futebol.entity.Estadio;
