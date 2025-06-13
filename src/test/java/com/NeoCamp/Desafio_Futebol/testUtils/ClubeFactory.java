@@ -9,13 +9,19 @@ import com.NeoCamp.Desafio_Futebol.entity.Estado;
 import java.time.LocalDate;
 
 public class ClubeFactory {
-    public static Clube createValidClube(String nome, String siglaEstado,
-                                         LocalDate dataCriacao, boolean ativo) {
+    public static Clube createValidClube(){
         Clube clube = new Clube();
+        clube.setNome("clube");
+        clube.setEstadoSede(EstadoFactory.createValidEstado());
+        return clube;
+    }
+
+    public static Clube createValidClubeComNomeEId(String nome, Long id){
+        Clube clube = new Clube();
+        clube.setId(id);
         clube.setNome(nome);
-        clube.setEstadoSede(new Estado("", siglaEstado));
-        clube.setDataCriacao(dataCriacao);
-        clube.setAtivo(ativo);
+        clube.setDataCriacao(LocalDate.of(2020, 1, 1));
+        clube.setEstadoSede(EstadoFactory.createValidEstadoComSigla("TO"));
         return clube;
     }
 

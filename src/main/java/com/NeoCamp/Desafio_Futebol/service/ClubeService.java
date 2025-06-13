@@ -30,13 +30,13 @@ public class ClubeService {
 
     public ClubeResponseDto findById(Long id) {
         Clube clube = clubeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Clube nao encontrado" + id));
+                .orElseThrow(() -> new EntityNotFoundException("Clube nao encontrado: " + id));
         return ClubeMapper.toDto(clube);
     }
 
     public Clube findEntityById(Long id) {
         return clubeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Clube nao encontrado" + id));
+                .orElseThrow(() -> new EntityNotFoundException("Clube nao encontrado: " + id));
     }
 
     public ClubeResponseDto save(ClubeRequestDto clubeRequestDto) {
@@ -64,12 +64,9 @@ public class ClubeService {
         return ClubeMapper.toDto(clubeAtualizado);
     }
 
-    public ClubeResponseDto delete(Long id) {
+    public void delete(Long id) {
         Clube clube = findEntityById(id);
         clube.setAtivo(false);
-        Clube clubeAtualizado = clubeRepository.save(clube);
-
-        return ClubeMapper.toDto(clubeAtualizado);
     }
 
     private void validarSiglaEstado(String sigla) {
