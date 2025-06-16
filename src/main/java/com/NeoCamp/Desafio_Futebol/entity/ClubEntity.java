@@ -13,7 +13,7 @@ public class ClubEntity {
 
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id", nullable = false)
     private StateEntity homeState;
 
