@@ -6,17 +6,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Estadio {
+public class StadiumEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String name;
 
-    public Estadio() {}
+    public StadiumEntity() {}
 
-    public Estadio(String nome) {
-        this.nome = nome;
+    public StadiumEntity(String name) {
+        this.name = name;
     }
 
     public Long getId() {
@@ -27,11 +27,11 @@ public class Estadio {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 }

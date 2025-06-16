@@ -6,26 +6,26 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Estado {
+public class StateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
-    private String sigla;
+    private String name;
+    private String code;
 
-    public Estado() {}
-    public Estado(String nome, String sigla) {
-        this.nome = nome;
-        this.sigla = sigla;
+    public StateEntity() {}
+    public StateEntity(String name, String code) {
+        this.name = name;
+        this.code = code;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getId() {
@@ -36,11 +36,11 @@ public class Estado {
         this.id = id;
     }
 
-    public String getSigla() {
-        return sigla;
+    public String getCode() {
+        return code;
     }
 
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
+    public void setCode(String code) {
+        this.code = code;
     }
 }
