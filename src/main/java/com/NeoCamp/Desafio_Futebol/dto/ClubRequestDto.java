@@ -54,7 +54,7 @@ public class ClubRequestDto {
         this.creationDate = creationDate;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return active;
     }
 

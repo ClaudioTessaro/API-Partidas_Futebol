@@ -67,6 +67,7 @@ public class ClubService {
     public void delete(Long id) {
         ClubEntity club = findEntityById(id);
         club.setActive(false);
+        clubRepository.save(club);
     }
 
     private void validateStateCode(String code) {

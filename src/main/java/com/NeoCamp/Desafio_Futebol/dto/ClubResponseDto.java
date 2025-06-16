@@ -29,7 +29,7 @@ public class ClubResponseDto {
         this.id = id;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return active;
     }
 
