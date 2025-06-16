@@ -1,0 +1,7 @@
+CREATE TABLE state (
+    id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    code CHAR(2) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE INDEX code_UNIQUE (code ASC) )
+    ENGINE = InnoDB;
