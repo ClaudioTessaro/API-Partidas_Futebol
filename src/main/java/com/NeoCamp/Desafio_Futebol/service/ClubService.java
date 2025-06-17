@@ -23,8 +23,14 @@ public class ClubService {
         this.stateService = stateService;
     }
 
-    public Page<ClubResponseDto> findAll(Pageable pageable) {
-        Page<ClubEntity> clubs = clubRepository.findAll(pageable);
+    public Page<ClubResponseDto> listClubsByFilters(String name, String stateCode, Boolean active, Pageable pageable) {
+        StateEntity homeState = null;
+        if (stateCode != null) {
+            homeState = stateService.findByCode(stateCode);
+
+        }
+
+        Page<ClubEntity> clubs = clubRepository.listClubsByFilters(name, homeState, active, pageable);
         return clubs.map(ClubMapper::toDto);
     }
 

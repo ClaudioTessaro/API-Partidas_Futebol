@@ -21,8 +21,12 @@ public class ClubController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ClubResponseDto>> findAll(Pageable pageable) {
-        Page<ClubResponseDto> clubs = clubService.findAll(pageable);
+    public ResponseEntity<Page<ClubResponseDto>> listClubsByFilters(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String stateCode,
+            @RequestParam(required = false) Boolean active,
+            @RequestParam(required = false) Pageable pageable) {
+        Page<ClubResponseDto> clubs = clubService.listClubsByFilters(name, stateCode, active, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(clubs);
     }
 
