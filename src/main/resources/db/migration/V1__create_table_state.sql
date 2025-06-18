@@ -1,7 +1,7 @@
-CREATE TABLE state (
-    id BIGINT(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE state
+(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    code CHAR(2) NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE INDEX code_UNIQUE (code ASC) )
-    ENGINE = InnoDB;
+    code CHAR(2)     NOT NULL,
+    CONSTRAINT code_UNIQUE UNIQUE (code)
+);
