@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface ClubRepository extends JpaRepository<ClubEntity, Long> {
     @Query("SELECT c FROM ClubEntity c " +
             "WHERE (:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
-            "AND (:homeState IS NULL OR c.homeState = :state) " +
+            "AND (:homeState IS NULL OR c.homeState = :homeState) " +
             "AND (:active IS NULL OR c.active = :active)")
     Page<ClubEntity> listClubsByFilters(
             @Param("name") String name,

@@ -40,8 +40,11 @@ public class ClubServiceTest {
 
     @Test
     public void shouldListAllClubsSuccessfully() {
-        ClubEntity club1 = ClubFactory.createValidClubEntity("club1", 1L, "MA");
-        ClubEntity club2 = ClubFactory.createValidClubEntity("club2", 2L, "BA");
+        ClubEntity club1 = ClubFactory.createValidClubEntity("club1", "MA");
+        club1.setId(1L);
+
+        ClubEntity club2 = ClubFactory.createValidClubEntity("club2", "BA");
+        club2.setId(2L);
 
         List<ClubEntity> clubsList = List.of(club1, club2);
 
@@ -50,7 +53,7 @@ public class ClubServiceTest {
 
         Mockito.when(clubRepository.findAll(pageable)).thenReturn(pageClubes);
 
-        Page<ClubResponseDto> result = clubService.findAll(pageable);
+        Page<ClubResponseDto> result = clubService.listClubsByFilters(null, null, null, pageable);
 
         Assertions.assertEquals(2, result.getTotalElements());
         Assertions.assertEquals("club1", result.getContent().get(0).getName());
@@ -62,7 +65,8 @@ public class ClubServiceTest {
 
     @Test
     public void shouldReturnClubDtoByIdSuccessfully() {
-        ClubEntity club = ClubFactory.createValidClubEntity("club", 10L, "TO");
+        ClubEntity club = ClubFactory.createValidClubEntity("club", "TO");
+        club.setId(10L);
         Mockito.when(clubRepository.findById(10L)).thenReturn(Optional.of(club));
 
         ClubResponseDto result = clubService.findById(10L);
@@ -84,7 +88,8 @@ public class ClubServiceTest {
 
     @Test
     public void shouldReturnClubEntityByIdSuccessfully() {
-        ClubEntity club = ClubFactory.createValidClubEntity("club2", 75L, "SP");
+        ClubEntity club = ClubFactory.createValidClubEntity("club2", "SP");
+        club.setId(75L);
         Mockito.when(clubRepository.findById(75L)).thenReturn(Optional.of(club));
 
         ClubEntity result = clubService.findEntityById(75L);

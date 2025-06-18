@@ -27,7 +27,6 @@ public class ClubService {
         StateEntity homeState = null;
         if (stateCode != null) {
             homeState = stateService.findByCode(stateCode);
-
         }
 
         Page<ClubEntity> clubs = clubRepository.listClubsByFilters(name, homeState, active, pageable);

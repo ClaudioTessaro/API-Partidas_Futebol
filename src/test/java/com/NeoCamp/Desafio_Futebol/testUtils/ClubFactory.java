@@ -4,16 +4,26 @@ import com.NeoCamp.Desafio_Futebol.dto.ClubRequestDto;
 import com.NeoCamp.Desafio_Futebol.dto.ClubResponseDto;
 import com.NeoCamp.Desafio_Futebol.dto.StateResponseDto;
 import com.NeoCamp.Desafio_Futebol.entity.ClubEntity;
+import com.NeoCamp.Desafio_Futebol.entity.StateEntity;
 
 import java.time.LocalDate;
 
 public class ClubFactory {
 
-    public static ClubEntity createValidClubEntity(String name, Long id, String stateCode){
+    public static ClubEntity createValidClubEntity(String name, String stateCode){
         ClubEntity club = new ClubEntity();
         club.setName(name);
-        club.setId(id);
         club.setHomeState(StateFactory.createValidState(stateCode));
+        return club;
+    }
+
+    public static ClubEntity createValidClubEntity(String name, StateEntity homeState,
+                                                   LocalDate creationDate, Boolean active){
+        ClubEntity club = new ClubEntity();
+        club.setName(name);
+        club.setHomeState(homeState);
+        club.setCreationDate(creationDate);
+        club.setActive(active);
         return club;
     }
 
