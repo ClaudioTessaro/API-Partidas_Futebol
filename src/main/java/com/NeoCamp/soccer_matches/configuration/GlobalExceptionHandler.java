@@ -1,5 +1,6 @@
-package com.NeoCamp.soccer_matches.exception;
+package com.NeoCamp.soccer_matches.configuration;
 
+import com.NeoCamp.soccer_matches.exception.BusinessException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
