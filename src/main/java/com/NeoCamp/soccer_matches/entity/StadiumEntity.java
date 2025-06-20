@@ -1,9 +1,15 @@
 package com.NeoCamp.soccer_matches.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "stadium")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class StadiumEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,25 +17,7 @@ public class StadiumEntity {
 
     private String name;
 
-    public StadiumEntity() {}
-
     public StadiumEntity(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
     }
 }

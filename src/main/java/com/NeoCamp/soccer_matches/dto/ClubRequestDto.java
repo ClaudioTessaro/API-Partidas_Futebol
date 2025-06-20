@@ -3,9 +3,15 @@ package com.NeoCamp.soccer_matches.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClubRequestDto {
     @NotBlank
     @Size(min = 3, max = 100)
@@ -20,45 +26,4 @@ public class ClubRequestDto {
 
     @NotNull
     private Boolean active;
-
-    public ClubRequestDto() {}
-
-    public ClubRequestDto(String name, String stateCode, LocalDate creationDate, Boolean active) {
-        this.name = name;
-        this.stateCode = stateCode;
-        this.creationDate = creationDate;
-        this.active = active;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getStateCode() {
-        return stateCode;
-    }
-
-    public void setStateCode(String stateCode) {
-        this.stateCode = stateCode;
-    }
-
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Boolean isActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
 }

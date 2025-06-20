@@ -6,17 +6,15 @@ import com.NeoCamp.soccer_matches.entity.StadiumEntity;
 import com.NeoCamp.soccer_matches.mapper.StadiumMapper;
 import com.NeoCamp.soccer_matches.repository.StadiumRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class StadiumService {
     private final StadiumRepository stadiumRepository;
-
-    public StadiumService(StadiumRepository stadiumRepository) {
-        this.stadiumRepository = stadiumRepository;
-    }
 
     public Page<StadiumResponseDto> findAll(Pageable pageable) {
         Page<StadiumEntity> stadiums = stadiumRepository.findAll(pageable);

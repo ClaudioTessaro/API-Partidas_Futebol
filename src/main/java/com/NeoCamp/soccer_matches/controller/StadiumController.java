@@ -4,6 +4,7 @@ import com.NeoCamp.soccer_matches.dto.StadiumRequestDto;
 import com.NeoCamp.soccer_matches.dto.StadiumResponseDto;
 import com.NeoCamp.soccer_matches.service.StadiumService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -11,14 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/stadiums")
 public class StadiumController {
 
     private final StadiumService stadiumService;
-
-    public StadiumController(StadiumService stadiumService) {
-        this.stadiumService = stadiumService;
-    }
 
     @GetMapping
     public ResponseEntity<Page<StadiumResponseDto>> findAll(Pageable pageable) {

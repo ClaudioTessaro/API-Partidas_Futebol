@@ -4,6 +4,7 @@ import com.NeoCamp.soccer_matches.dto.ClubRequestDto;
 import com.NeoCamp.soccer_matches.dto.ClubResponseDto;
 import com.NeoCamp.soccer_matches.service.ClubService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -11,14 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/clubs")
 public class ClubController {
 
     private final ClubService clubService;
-
-    public ClubController(ClubService clubService) {
-        this.clubService = clubService;
-    }
 
     @GetMapping
     public ResponseEntity<Page<ClubResponseDto>> listClubsByFilters(

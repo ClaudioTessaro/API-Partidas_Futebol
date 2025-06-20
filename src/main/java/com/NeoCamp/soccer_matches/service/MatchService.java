@@ -8,21 +8,17 @@ import com.NeoCamp.soccer_matches.entity.MatchEntity;
 import com.NeoCamp.soccer_matches.mapper.MatchMapper;
 import com.NeoCamp.soccer_matches.repository.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MatchService {
     private final MatchRepository matchRepository;
     private final ClubService clubService;
     private final StadiumService stadiumService;
-
-    public MatchService(MatchRepository matchRepository, ClubService clubService, StadiumService stadiumService) {
-        this.matchRepository = matchRepository;
-        this.clubService = clubService;
-        this.stadiumService = stadiumService;
-    }
 
     public Page<MatchResponseDto> listMatchesByFilters(Long clubId, Long stadiumId, Pageable pageable) {
         ClubEntity club = null;

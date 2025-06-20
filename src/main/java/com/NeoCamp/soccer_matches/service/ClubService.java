@@ -9,19 +9,16 @@ import com.NeoCamp.soccer_matches.exception.BusinessException;
 import com.NeoCamp.soccer_matches.mapper.ClubMapper;
 import com.NeoCamp.soccer_matches.repository.ClubRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ClubService {
     private final ClubRepository clubRepository;
     private final StateService stateService;
-
-    public ClubService(ClubRepository clubRepository, StateService stateService) {
-        this.clubRepository = clubRepository;
-        this.stateService = stateService;
-    }
 
     public Page<ClubResponseDto> listClubsByFilters(String name, String stateCode, Boolean active, Pageable pageable) {
         StateEntity homeState = null;
@@ -63,7 +60,7 @@ public class ClubService {
         club.setName(clubRequestDto.getName());
         club.setHomeState(state);
         club.setCreationDate(clubRequestDto.getCreationDate());
-        club.setActive(clubRequestDto.isActive());
+        club.setActive(clubRequestDto.getActive());
 
         ClubEntity updatedClub = clubRepository.save(club);
         return ClubMapper.toDto(updatedClub);

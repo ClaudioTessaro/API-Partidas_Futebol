@@ -4,6 +4,7 @@ import com.NeoCamp.soccer_matches.dto.MatchRequestDto;
 import com.NeoCamp.soccer_matches.dto.MatchResponseDto;
 import com.NeoCamp.soccer_matches.service.MatchService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -11,13 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/matches")
 public class MatchController {
     private final MatchService matchService;
-
-    public MatchController(MatchService matchService) {
-        this.matchService = matchService;
-    }
 
     @GetMapping
     public ResponseEntity<Page<MatchResponseDto>> listMatchesByFilters(
