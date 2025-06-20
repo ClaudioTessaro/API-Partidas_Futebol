@@ -50,7 +50,7 @@ public class ClubRepositoryTest {
 
         Assertions.assertFalse(clubs.isEmpty());
         Assertions.assertEquals(3, clubs.getTotalElements());
-        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().contains("l")));
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("l")));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ClubRepositoryTest {
 
         Assertions.assertFalse(clubs.isEmpty());
         Assertions.assertEquals(2, clubs.getTotalElements());
-        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().contains("l")));
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("l")));
         Assertions.assertTrue(clubs.stream().allMatch(club -> club.getHomeState().equals(sp)));
     }
 
@@ -86,6 +86,42 @@ public class ClubRepositoryTest {
 
         Assertions.assertFalse(clubs.isEmpty());
         Assertions.assertEquals(1, clubs.getTotalElements());
-        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().contains("g")));
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("g")));
+    }
+
+    @Test
+    public void shouldFilterClubsByHomeStateAndActive() {
+        Page<ClubEntity> clubs = clubRepository.listClubsByFilters(null, sp, false, pageable);
+
+        Assertions.assertFalse(clubs.isEmpty());
+        Assertions.assertEquals(1, clubs.getTotalElements());
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getHomeState().equals(sp)));
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.isActive().equals(false)));
+    }
+
+    @Test
+    public void shouldFilterClubsByNameAndHomeStateAndActive() {
+        Page<ClubEntity> clubs = clubRepository.listClubsByFilters("l", sp, true, pageable);
+
+        Assertions.assertFalse(clubs.isEmpty());
+        Assertions.assertEquals(1, clubs.getTotalElements());
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("l")));
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getHomeState().equals(sp)));
+    }
+
+    @Test
+    public void shouldReturnAllClubs_WhenFiltersAreNull(){
+        Page<ClubEntity> clubs = clubRepository.listClubsByFilters(null, null, null, pageable);
+
+        Assertions.assertFalse(clubs.isEmpty());
+        Assertions.assertEquals(4, clubs.getTotalElements());
+    }
+
+    @Test
+    public void shouldReturnEmptyPage_WhenPageIsOutOfBounds() {
+        Pageable outOfBounds = PageRequest.of(15, 10);
+        Page<ClubEntity> clubs = clubRepository.listClubsByFilters(null, null, null, outOfBounds);
+
+        Assertions.assertTrue(clubs.isEmpty());
     }
 }

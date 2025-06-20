@@ -10,6 +10,7 @@ import com.NeoCamp.Desafio_Futebol.testUtils.ClubFactory;
 import com.NeoCamp.Desafio_Futebol.testUtils.StateFactory;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -38,20 +39,26 @@ public class ClubServiceTest {
     @InjectMocks
     private ClubService clubService;
 
+    private Pageable pageable;
+
+    @BeforeEach
+    public void setUp() {
+        pageable = PageRequest.of(0, 10);
+    }
+
     @Test
-    public void shouldListAllClubsSuccessfully() {
+    public void shouldListAllClubs_WhenAllFiltersAreNull() {
         ClubEntity club1 = ClubFactory.createValidClubEntity("club1", "MA");
         club1.setId(1L);
-
         ClubEntity club2 = ClubFactory.createValidClubEntity("club2", "BA");
         club2.setId(2L);
 
         List<ClubEntity> clubsList = List.of(club1, club2);
 
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<ClubEntity> pageClubes = new PageImpl<>(clubsList, pageable, clubsList.size());
+        Page<ClubEntity> clubs = new PageImpl<>(clubsList, pageable, clubsList.size());
 
-        Mockito.when(clubRepository.findAll(pageable)).thenReturn(pageClubes);
+        Mockito.when(clubRepository.listClubsByFilters(null, null, null, pageable))
+                .thenReturn(clubs);
 
         Page<ClubResponseDto> result = clubService.listClubsByFilters(null, null, null, pageable);
 
@@ -61,6 +68,105 @@ public class ClubServiceTest {
         Assertions.assertEquals(1L, result.getContent().get(0).getId());
         Assertions.assertEquals(2L, result.getContent().get(1).getId());
         Assertions.assertEquals("MA", result.getContent().get(0).getHomeState().getCode());
+    }
+
+    @Test
+    public void shouldListClubsByName() {
+        ClubEntity club1 = ClubFactory.createValidClubEntity("club1", "MA");
+        Page<ClubEntity> clubs = new PageImpl<>(List.of(club1), pageable, 1);
+
+        Mockito.when(clubRepository.listClubsByFilters("club1", null,
+                null, pageable)).thenReturn(clubs);
+
+        Page<ClubResponseDto> result = clubService.listClubsByFilters("club1",
+                null, null, pageable);
+
+        Assertions.assertEquals(1, result.getTotalElements());
+        Assertions.assertEquals("club1", result.getContent().getFirst().getName());
+    }
+
+    @Test
+    public void shouldListClubsByHomeState() {
+        StateEntity rs = StateFactory.createValidState("Internacional", "RS");
+        Mockito.when(stateService.findByCode("RS")).thenReturn(rs);
+
+        ClubEntity club2 = ClubFactory.createValidClubEntity("club2", "RS");
+        Page<ClubEntity> clubs = new PageImpl<>(List.of(club2), pageable, 1);
+
+        Mockito.when(clubRepository.listClubsByFilters(null, rs,  null, pageable ))
+                .thenReturn(clubs);
+
+        Page<ClubResponseDto> result = clubService.listClubsByFilters(null, "RS", null, pageable);
+
+        Assertions.assertEquals(1, result.getTotalElements());
+        Assertions.assertEquals("club2", result.getContent().getFirst().getName());
+        Assertions.assertEquals("RS", result.getContent().getFirst().getHomeState().getCode());
+    }
+
+    @Test
+    public void shouldListClubsByActive() {
+        ClubEntity club3 = ClubFactory.createValidClubEntity("club3", "MA");
+        club3.setActive(true);
+        Page<ClubEntity> clubs = new PageImpl<>(List.of(club3), pageable, 1);
+
+        Mockito.when(clubRepository.listClubsByFilters(null, null, true, pageable))
+                .thenReturn(clubs);
+
+        Page<ClubResponseDto> result = clubService.listClubsByFilters(null, null, true, pageable);
+
+        Assertions.assertEquals(1, result.getTotalElements());
+        Assertions.assertEquals("club3", result.getContent().getFirst().getName());
+        Assertions.assertEquals("MA", result.getContent().getFirst().getHomeState().getCode());
+    }
+
+    @Test
+    public void shouldListClubsByHomeStateAndActive() {
+        StateEntity rs = StateFactory.createValidState("Rio Grande do Sul", "RS");
+        Mockito.when(stateService.findByCode("RS")).thenReturn(rs);
+
+        ClubEntity club7 = ClubFactory.createValidClubEntity("club7", "RS");
+        club7.setActive(true);
+
+        Page<ClubEntity> clubs = new PageImpl<>(List.of(club7), pageable, 1);
+
+        Mockito.when(clubRepository.listClubsByFilters(null, rs, true, pageable))
+                .thenReturn(clubs);
+        Page<ClubResponseDto> result = clubService.listClubsByFilters(null, "RS", true, pageable);
+
+        Assertions.assertEquals(1, result.getTotalElements());
+        Assertions.assertEquals("club7", result.getContent().getFirst().getName());
+        Assertions.assertEquals("RS", result.getContent().getFirst().getHomeState().getCode());
+    }
+
+    @Test
+    public void shouldListClubsByNameAndHomeStateAndActive() {
+        StateEntity rj = StateFactory.createValidState("Rio de Janeiro", "RJ");
+        Mockito.when(stateService.findByCode("RJ")).thenReturn(rj);
+
+        ClubEntity club10 = ClubFactory.createValidClubEntity("club10", "RJ");
+        club10.setActive(true);
+
+        Page<ClubEntity> clubs = new PageImpl<>(List.of(club10), pageable, 1);
+
+        Mockito.when(clubRepository.listClubsByFilters("club10", rj, true, pageable))
+                .thenReturn(clubs);
+
+        Page<ClubResponseDto> result = clubService.listClubsByFilters("club10", "RJ", true, pageable);
+
+        Assertions.assertEquals(1, result.getTotalElements());
+        Assertions.assertEquals("club10", result.getContent().getFirst().getName());
+        Assertions.assertEquals("RJ", result.getContent().getFirst().getHomeState().getCode());
+        Assertions.assertTrue(result.getContent().getFirst().isActive());
+    }
+
+    @Test
+    public void shouldReturnEmptyPage_WhenNoClubMatchFilters() {
+        Mockito.when(clubRepository.listClubsByFilters("XXX", null, null, pageable))
+                .thenReturn(Page.empty(pageable));
+
+        Page<ClubResponseDto> result = clubService.listClubsByFilters("XXX", null, null, pageable);
+
+        Assertions.assertTrue(result.isEmpty());
     }
 
     @Test
@@ -77,7 +183,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInFindByIdWithInvalidId() {
+    public void shouldThrowExceptionInFindById_WhenInvalidId() {
         Long invalidId = -2L;
         Mockito.when(clubRepository.findById(invalidId)).thenReturn(Optional.empty());
 
@@ -100,7 +206,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInFindEntityByIdWithInvalidId(){
+    public void shouldThrowExceptionInFindEntityById_WhenInvalidId(){
         Long invalidId = -10L;
         Mockito.when(clubRepository.findById(invalidId)).thenReturn(Optional.empty());
 
@@ -132,7 +238,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInSaveClubWithInvalidStateCode() {
+    public void shouldThrowExceptionInSaveClub_WhenInvalidStateCode() {
         String invalidStateCode = "XXX";
         ClubRequestDto clubDto = ClubFactory.createValidClubRequestDto("club3",invalidStateCode,
                 LocalDate.of(2020, 3, 15), true);
@@ -171,7 +277,7 @@ public class ClubServiceTest {
         Assertions.assertEquals(LocalDate.of(2020, 3, 15), result.getCreationDate());
     }
     @Test
-    public void shouldThrowExceptionInUpdateClubWithInvalidId(){
+    public void shouldThrowExceptionInUpdateClub_WhenInvalidId(){
         Long invalidId = -1L;
         ClubRequestDto clubDto = ClubFactory.createValidClubRequestDto("club5", "RS",
                 LocalDate.of(2020, 3, 15), true);
@@ -185,7 +291,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInUpdateClubWithInvalidStateCode() {
+    public void shouldThrowExceptionInUpdateClub_WhenInvalidStateCode() {
         Long validId = 5L;
         String invalidStateCode = "YYY";
 
@@ -203,7 +309,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    void shouldMarkClubAsInactiveWhenDeleteIsCalled() {
+    void shouldMarkClubAsInactive_WhenDeleteIsCalled() {
         Long existingClubId = 11L;
         ClubEntity existingClub = new ClubEntity();
         existingClub.setId(existingClubId);
