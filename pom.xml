@@ -8,11 +8,11 @@
 		<version>3.5.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.NeoCamp</groupId>
-	<artifactId>Soccer_Matches</artifactId>
+	<groupId>com.neocamp</groupId>
+	<artifactId>soccer-matches</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Desafio-Futebol</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Soccer Matches API</name>
+	<description>A REST API for managing soccer clubs, stadiums, and matches. Practical coding challenge.</description>
 	<url/>
 	<licenses>
 		<license/>
