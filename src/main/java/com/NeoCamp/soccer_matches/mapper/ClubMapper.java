@@ -1,9 +1,9 @@
 package com.neocamp.soccer_matches.mapper;
 
-import com.NeoCamp.soccer_matches.dto.ClubRequestDto;
-import com.NeoCamp.soccer_matches.dto.ClubResponseDto;
-import com.NeoCamp.soccer_matches.entity.ClubEntity;
-import com.NeoCamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.dto.ClubRequestDto;
+import com.neocamp.soccer_matches.dto.ClubResponseDto;
+import com.neocamp.soccer_matches.entity.ClubEntity;
+import com.neocamp.soccer_matches.entity.StateEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

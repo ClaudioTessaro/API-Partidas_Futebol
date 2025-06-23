@@ -1,10 +1,10 @@
 package com.neocamp.soccer_matches.mapper;
 
-import com.NeoCamp.soccer_matches.dto.MatchRequestDto;
-import com.NeoCamp.soccer_matches.dto.MatchResponseDto;
-import com.NeoCamp.soccer_matches.entity.ClubEntity;
-import com.NeoCamp.soccer_matches.entity.StadiumEntity;
-import com.NeoCamp.soccer_matches.entity.MatchEntity;
+import com.neocamp.soccer_matches.dto.MatchRequestDto;
+import com.neocamp.soccer_matches.dto.MatchResponseDto;
+import com.neocamp.soccer_matches.entity.ClubEntity;
+import com.neocamp.soccer_matches.entity.StadiumEntity;
+import com.neocamp.soccer_matches.entity.MatchEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

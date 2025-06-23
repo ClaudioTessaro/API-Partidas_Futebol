@@ -1,6 +1,7 @@
 package com.neocamp.soccer_matches.repository;
 
 import com.neocamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.enums.StateCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface StateRepository extends JpaRepository<StateEntity, Long> {
-    public Optional<StateEntity> findByCode(String code);
+    public Optional<StateEntity> findByCode(StateCode code);
 }

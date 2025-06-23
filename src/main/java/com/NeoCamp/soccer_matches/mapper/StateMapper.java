@@ -1,7 +1,7 @@
 package com.neocamp.soccer_matches.mapper;
 
-import com.NeoCamp.soccer_matches.dto.StateResponseDto;
-import com.NeoCamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.dto.StateResponseDto;
+import com.neocamp.soccer_matches.entity.StateEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
