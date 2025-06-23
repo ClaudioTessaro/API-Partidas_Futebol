@@ -1,6 +1,6 @@
 package com.neocamp.soccer_matches.dto;
 
-import com.NeoCamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.entity.StateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +16,6 @@ public class StateResponseDto {
     public StateResponseDto(StateEntity state) {
         this.id = state.getId();
         this.name = state.getName();
-        this.code = state.getCode();
+        this.code = state.getCode() != null? state.getCode().name() : null;
     }
 }
