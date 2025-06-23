@@ -1,8 +1,8 @@
-package com.NeoCamp.soccer_matches.repository;
+package com.neocamp.soccer_matches.repository;
 
-import com.NeoCamp.soccer_matches.entity.ClubEntity;
-import com.NeoCamp.soccer_matches.entity.StateEntity;
-import com.NeoCamp.soccer_matches.testUtils.ClubFactory;
+import com.neocamp.soccer_matches.entity.ClubEntity;
+import com.neocamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.testUtils.ClubFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,7 +96,7 @@ public class ClubRepositoryTest {
         Assertions.assertFalse(clubs.isEmpty());
         Assertions.assertEquals(1, clubs.getTotalElements());
         Assertions.assertTrue(clubs.stream().allMatch(club -> club.getHomeState().equals(sp)));
-        Assertions.assertTrue(clubs.stream().allMatch(club -> club.isActive().equals(false)));
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getActive().equals(false)));
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.dto;
+package com.neocamp.soccer_matches.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

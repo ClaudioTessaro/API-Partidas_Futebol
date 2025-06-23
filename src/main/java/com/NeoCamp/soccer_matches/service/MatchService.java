@@ -1,12 +1,12 @@
-package com.NeoCamp.soccer_matches.service;
+package com.neocamp.soccer_matches.service;
 
-import com.NeoCamp.soccer_matches.dto.MatchRequestDto;
-import com.NeoCamp.soccer_matches.dto.MatchResponseDto;
-import com.NeoCamp.soccer_matches.entity.ClubEntity;
-import com.NeoCamp.soccer_matches.entity.StadiumEntity;
-import com.NeoCamp.soccer_matches.entity.MatchEntity;
-import com.NeoCamp.soccer_matches.mapper.MatchMapper;
-import com.NeoCamp.soccer_matches.repository.MatchRepository;
+import com.neocamp.soccer_matches.dto.MatchRequestDto;
+import com.neocamp.soccer_matches.dto.MatchResponseDto;
+import com.neocamp.soccer_matches.entity.ClubEntity;
+import com.neocamp.soccer_matches.entity.StadiumEntity;
+import com.neocamp.soccer_matches.entity.MatchEntity;
+import com.neocamp.soccer_matches.mapper.MatchMapper;
+import com.neocamp.soccer_matches.repository.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +19,7 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final ClubService clubService;
     private final StadiumService stadiumService;
+    private final MatchMapper matchMapper;
 
     public Page<MatchResponseDto> listMatchesByFilters(Long clubId, Long stadiumId, Pageable pageable) {
         ClubEntity club = null;
@@ -32,13 +33,13 @@ public class MatchService {
         }
 
         Page<MatchEntity> matches = matchRepository.listMatchesByFilters(club, stadium, pageable);
-        return matches.map(MatchMapper::toDto);
+        return matches.map(matchMapper::toDto);
     }
 
     public MatchResponseDto findById(Long id) {
         MatchEntity match = matchRepository.findById(id).
                 orElseThrow(() -> new EntityNotFoundException("Match not found: " + id));
-        return MatchMapper.toDto(match);
+        return matchMapper.toDto(match);
     }
 
     public MatchEntity findEntityById(Long Id) {
@@ -51,9 +52,9 @@ public class MatchService {
         ClubEntity awayClub = clubService.findEntityById(matchRequestDto.getAwayClubId());
         StadiumEntity stadium = stadiumService.findEntityById(matchRequestDto.getStadiumId());
 
-        MatchEntity match = MatchMapper.toEntity(matchRequestDto, homeClub, awayClub, stadium);
+        MatchEntity match = matchMapper.toEntity(matchRequestDto, homeClub, awayClub, stadium);
         matchRepository.save(match);
-        return MatchMapper.toDto(match);
+        return matchMapper.toDto(match);
     }
 
     public MatchResponseDto update(Long id, MatchRequestDto matchRequestDto) {
@@ -70,7 +71,7 @@ public class MatchService {
         match.setMatchDatetime(matchRequestDto.getMatchDatetime());
 
         MatchEntity updatedMatch = matchRepository.save(match);
-        return MatchMapper.toDto(updatedMatch);
+        return matchMapper.toDto(updatedMatch);
     }
 
     public void delete(Long id) {

@@ -1,6 +1,6 @@
-package com.NeoCamp.soccer_matches.repository;
+package com.neocamp.soccer_matches.repository;
 
-import com.NeoCamp.soccer_matches.entity.StadiumEntity;
+import com.neocamp.soccer_matches.entity.StadiumEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

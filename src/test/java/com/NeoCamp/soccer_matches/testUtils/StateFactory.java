@@ -1,6 +1,6 @@
-package com.NeoCamp.soccer_matches.testUtils;
+package com.neocamp.soccer_matches.testUtils;
 
-import com.NeoCamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.entity.StateEntity;
 
 public class StateFactory {
 

@@ -1,8 +1,8 @@
-package com.NeoCamp.soccer_matches.controller;
+package com.neocamp.soccer_matches.controller;
 
-import com.NeoCamp.soccer_matches.dto.StadiumRequestDto;
-import com.NeoCamp.soccer_matches.dto.StadiumResponseDto;
-import com.NeoCamp.soccer_matches.service.StadiumService;
+import com.neocamp.soccer_matches.dto.StadiumRequestDto;
+import com.neocamp.soccer_matches.dto.StadiumResponseDto;
+import com.neocamp.soccer_matches.service.StadiumService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -1,13 +1,14 @@
-package com.NeoCamp.soccer_matches.service;
+package com.neocamp.soccer_matches.service;
 
-import com.NeoCamp.soccer_matches.dto.ClubRequestDto;
-import com.NeoCamp.soccer_matches.dto.ClubResponseDto;
-import com.NeoCamp.soccer_matches.entity.ClubEntity;
-import com.NeoCamp.soccer_matches.entity.StateEntity;
-import com.NeoCamp.soccer_matches.exception.BusinessException;
-import com.NeoCamp.soccer_matches.repository.ClubRepository;
-import com.NeoCamp.soccer_matches.testUtils.ClubFactory;
-import com.NeoCamp.soccer_matches.testUtils.StateFactory;
+import com.neocamp.soccer_matches.dto.ClubRequestDto;
+import com.neocamp.soccer_matches.dto.ClubResponseDto;
+import com.neocamp.soccer_matches.entity.ClubEntity;
+import com.neocamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.exception.BusinessException;
+import com.neocamp.soccer_matches.mapper.ClubMapper;
+import com.neocamp.soccer_matches.repository.ClubRepository;
+import com.neocamp.soccer_matches.testUtils.ClubFactory;
+import com.neocamp.soccer_matches.testUtils.StateFactory;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,38 +37,43 @@ public class ClubServiceTest {
     @Mock
     private StateService stateService;
 
+    @Mock
+    private ClubMapper clubMapper;
+
     @InjectMocks
     private ClubService clubService;
 
-    private Pageable pageable;
+    private Pageable pageable = PageRequest.of(0, 10);
+    private ClubEntity gremio, flamengo, corinthians, saoPaulo;
 
     @BeforeEach
     public void setUp() {
-        pageable = PageRequest.of(0, 10);
+        gremio = ClubFactory.createValidClubEntity("Grêmio", "RS");
+        flamengo = ClubFactory.createValidClubEntity("Flamengo", "RJ");
+        corinthians = ClubFactory.createValidClubEntity("Corinthians", "SP");
+        saoPaulo = ClubFactory.createValidClubEntity("São Paulo", "SP");
+
+        Mockito.when(clubMapper.toDto(Mockito.any(ClubEntity.class))).thenAnswer(
+                invocation -> {
+                    ClubEntity entity = invocation.getArgument(0, ClubEntity.class);
+                    return new ClubResponseDto(entity);
+                });
     }
 
     @Test
     public void shouldListAllClubs_WhenAllFiltersAreNull() {
-        ClubEntity club1 = ClubFactory.createValidClubEntity("club1", "MA");
-        club1.setId(1L);
-        ClubEntity club2 = ClubFactory.createValidClubEntity("club2", "BA");
-        club2.setId(2L);
-
-        List<ClubEntity> clubsList = List.of(club1, club2);
-
-        Page<ClubEntity> clubs = new PageImpl<>(clubsList, pageable, clubsList.size());
+        Page<ClubEntity> clubs = new PageImpl<>(List.of(gremio, flamengo), pageable, 2);
 
         Mockito.when(clubRepository.listClubsByFilters(null, null, null, pageable))
                 .thenReturn(clubs);
+        Mockito.when(clubService.)
 
         Page<ClubResponseDto> result = clubService.listClubsByFilters(null, null, null, pageable);
 
-        Assertions.assertEquals(2, result.getTotalElements());
-        Assertions.assertEquals("club1", result.getContent().get(0).getName());
-        Assertions.assertEquals("club2", result.getContent().get(1).getName());
-        Assertions.assertEquals(1L, result.getContent().get(0).getId());
-        Assertions.assertEquals(2L, result.getContent().get(1).getId());
-        Assertions.assertEquals("MA", result.getContent().get(0).getHomeState().getCode());
+        Assertions.assertEquals(4, result.getTotalElements());
+        Assertions.assertEquals("Grêmio", result.getContent().get(0).getName());
+        Assertions.assertEquals("Flamengo", result.getContent().get(1).getName());
+        Assertions.assertEquals("São Paulo", result.getContent().get(3).getName());
     }
 
     @Test
@@ -156,7 +162,7 @@ public class ClubServiceTest {
         Assertions.assertEquals(1, result.getTotalElements());
         Assertions.assertEquals("club10", result.getContent().getFirst().getName());
         Assertions.assertEquals("RJ", result.getContent().getFirst().getHomeState().getCode());
-        Assertions.assertTrue(result.getContent().getFirst().isActive());
+        Assertions.assertTrue(result.getContent().getFirst().getActive());
     }
 
     @Test
@@ -324,6 +330,6 @@ public class ClubServiceTest {
         ClubEntity club = captor.getValue();
 
         Assertions.assertEquals(existingClubId, club.getId());
-        Assertions.assertFalse(club.isActive());
+        Assertions.assertFalse(club.getActive());
     }
 }

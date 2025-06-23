@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.dto;
+package com.neocamp.soccer_matches.dto;
 
 import com.NeoCamp.soccer_matches.entity.StateEntity;
 import lombok.AllArgsConstructor;

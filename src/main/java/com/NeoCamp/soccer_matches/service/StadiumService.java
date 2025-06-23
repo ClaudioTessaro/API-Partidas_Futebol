@@ -1,10 +1,10 @@
-package com.NeoCamp.soccer_matches.service;
+package com.neocamp.soccer_matches.service;
 
-import com.NeoCamp.soccer_matches.dto.StadiumRequestDto;
-import com.NeoCamp.soccer_matches.dto.StadiumResponseDto;
-import com.NeoCamp.soccer_matches.entity.StadiumEntity;
-import com.NeoCamp.soccer_matches.mapper.StadiumMapper;
-import com.NeoCamp.soccer_matches.repository.StadiumRepository;
+import com.neocamp.soccer_matches.dto.StadiumRequestDto;
+import com.neocamp.soccer_matches.dto.StadiumResponseDto;
+import com.neocamp.soccer_matches.entity.StadiumEntity;
+import com.neocamp.soccer_matches.mapper.StadiumMapper;
+import com.neocamp.soccer_matches.repository.StadiumRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StadiumService {
     private final StadiumRepository stadiumRepository;
+    private final StadiumMapper stadiumMapper;
 
     public Page<StadiumResponseDto> findAll(Pageable pageable) {
         Page<StadiumEntity> stadiums = stadiumRepository.findAll(pageable);
@@ -24,7 +25,7 @@ public class StadiumService {
     public StadiumResponseDto findById(Long id) {
         StadiumEntity stadium = stadiumRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Stadium not found: " + id));
-        return StadiumMapper.toDto(stadium);
+        return stadiumMapper.toDto(stadium);
     }
 
     public StadiumEntity findEntityById(Long id) {
@@ -33,9 +34,9 @@ public class StadiumService {
     }
 
     public StadiumResponseDto save(StadiumRequestDto stadiumRequestDto) {
-        StadiumEntity stadium = StadiumMapper.toEntity(stadiumRequestDto);
+        StadiumEntity stadium = stadiumMapper.toEntity(stadiumRequestDto);
         StadiumEntity savedStadium = stadiumRepository.save(stadium);
-        return StadiumMapper.toDto(savedStadium);
+        return stadiumMapper.toDto(savedStadium);
     }
 
     public StadiumResponseDto update(Long id, StadiumRequestDto stadiumRequestDto) {
@@ -43,6 +44,6 @@ public class StadiumService {
         stadium.setName(stadiumRequestDto.getName());
 
         StadiumEntity savedStadium = stadiumRepository.save(stadium);
-        return StadiumMapper.toDto(savedStadium);
+        return stadiumMapper.toDto(savedStadium);
     }
 }

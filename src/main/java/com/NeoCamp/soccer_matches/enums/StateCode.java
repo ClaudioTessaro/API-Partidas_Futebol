@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.enums;
+package com.neocamp.soccer_matches.enums;
 
 public enum StateCode {
         AC, AL, AP, AM, BA, CE, DF, ES, GO, MA,

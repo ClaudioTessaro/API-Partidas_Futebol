@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.configuration;
+package com.neocamp.soccer_matches.configuration;
 
 import com.NeoCamp.soccer_matches.exception.BusinessException;
 import jakarta.persistence.EntityNotFoundException;

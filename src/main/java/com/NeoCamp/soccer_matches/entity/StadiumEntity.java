@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.entity;
+package com.neocamp.soccer_matches.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

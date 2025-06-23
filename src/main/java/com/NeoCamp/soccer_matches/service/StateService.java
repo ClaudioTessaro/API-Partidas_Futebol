@@ -1,8 +1,8 @@
-package com.NeoCamp.soccer_matches.service;
+package com.neocamp.soccer_matches.service;
 
-import com.NeoCamp.soccer_matches.entity.StateEntity;
-import com.NeoCamp.soccer_matches.exception.BusinessException;
-import com.NeoCamp.soccer_matches.repository.StateRepository;
+import com.neocamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.exception.BusinessException;
+import com.neocamp.soccer_matches.repository.StateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

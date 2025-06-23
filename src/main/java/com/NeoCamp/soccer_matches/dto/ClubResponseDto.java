@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.dto;
+package com.neocamp.soccer_matches.dto;
 
 import com.NeoCamp.soccer_matches.entity.ClubEntity;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,6 @@ public class ClubResponseDto {
         this.name = club.getName();
         this.homeState = new StateResponseDto(club.getHomeState());
         this.creationDate = club.getCreationDate();
-        this.active = club.isActive();
+        this.active = club.getActive();
     }
 }

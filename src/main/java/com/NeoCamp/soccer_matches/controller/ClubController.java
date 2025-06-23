@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.controller;
+package com.neocamp.soccer_matches.controller;
 
 import com.NeoCamp.soccer_matches.dto.ClubRequestDto;
 import com.NeoCamp.soccer_matches.dto.ClubResponseDto;
