@@ -1,6 +1,6 @@
 package com.neocamp.soccer_matches.dto;
 
-import com.NeoCamp.soccer_matches.entity.StadiumEntity;
+import com.neocamp.soccer_matches.entity.StadiumEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

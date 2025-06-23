@@ -24,7 +24,7 @@ public class ClubService {
     public Page<ClubResponseDto> listClubsByFilters(String name, String stateCode, Boolean active, Pageable pageable) {
         StateEntity homeState = null;
         if (stateCode != null) {
-            homeState = stateService.findByCode(stateCode);
+            homeState = stateService.findByCode(StateCode.valueOf(stateCode));
         }
 
         Page<ClubEntity> clubs = clubRepository.listClubsByFilters(name, homeState, active, pageable);
@@ -45,7 +45,7 @@ public class ClubService {
     public ClubResponseDto save(ClubRequestDto clubRequestDto) {
         validateStateCode(clubRequestDto.getStateCode());
 
-        StateEntity homeState = stateService.findByCode(clubRequestDto.getStateCode());
+        StateEntity homeState = stateService.findByCode(StateCode.valueOf(clubRequestDto.getStateCode()));
         ClubEntity club = clubMapper.toEntity(clubRequestDto, homeState);
         ClubEntity savedClub = clubRepository.save(club);
 
@@ -56,7 +56,7 @@ public class ClubService {
         ClubEntity club = findEntityById(id);
 
         validateStateCode(clubRequestDto.getStateCode());
-        StateEntity state = stateService.findByCode(clubRequestDto.getStateCode());
+        StateEntity state = stateService.findByCode(StateCode.valueOf(clubRequestDto.getStateCode()));
 
         club.setName(clubRequestDto.getName());
         club.setHomeState(state);

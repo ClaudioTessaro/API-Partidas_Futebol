@@ -2,7 +2,8 @@ package com.neocamp.soccer_matches.repository;
 
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
-import com.neocamp.soccer_matches.testUtils.ClubFactory;
+import com.neocamp.soccer_matches.enums.StateCode;
+import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,10 @@ public class ClubRepositoryTest {
 
     @Autowired
     private ClubRepository clubRepository;
+
     @Autowired
     private StateRepository stateRepository;
+
 
     private StateEntity rs;
     private StateEntity rj;
@@ -32,16 +35,16 @@ public class ClubRepositoryTest {
     public void setup() {
         pageable = PageRequest.of(0, 10);
 
-        rs = stateRepository.findByCode("RS").orElseThrow(() -> new RuntimeException("State not found"));
-        rj = stateRepository.findByCode("RJ").orElseThrow(() -> new RuntimeException("State not found"));
-        sp = stateRepository.findByCode("SP").orElseThrow(() -> new RuntimeException("State not found"));
+        rs = stateRepository.findByCode(StateCode.RS).orElseThrow(() -> new RuntimeException("State not found"));
+        rj = stateRepository.findByCode(StateCode.RJ).orElseThrow(() -> new RuntimeException("State not found"));
+        sp = stateRepository.findByCode(StateCode.SP).orElseThrow(() -> new RuntimeException("State not found"));
 
-        ClubEntity gremio = ClubFactory.createValidClubEntity("Grêmio", rs, LocalDate.now(), true);
-        ClubEntity fluminense = ClubFactory.createValidClubEntity("Fluminense", rj, LocalDate.now(), true);
-        ClubEntity palmeiras = ClubFactory.createValidClubEntity("Palmeiras", sp, LocalDate.now(), true);
-        ClubEntity inativo = ClubFactory.createValidClubEntity("Clube Inativo", sp,  LocalDate.now(), false);
+        ClubEntity gremio = ClubMockUtils.gremio();
+        ClubEntity flamengo = ClubMockUtils.flamengo();
+        ClubEntity corinthians = ClubMockUtils.corinthians();
+        ClubEntity inativo = ClubMockUtils.inativoSp();
 
-        clubRepository.saveAll(List.of(gremio, fluminense, palmeiras, inativo));
+        clubRepository.saveAll(List.of(gremio, flamengo, corinthians, inativo));
     }
 
     @Test
