@@ -1,19 +1,19 @@
-package com.NeoCamp.soccer_matches.mapper;
+package com.neocamp.soccer_matches.mapper;
 
 import com.NeoCamp.soccer_matches.dto.ClubRequestDto;
 import com.NeoCamp.soccer_matches.dto.ClubResponseDto;
-import com.NeoCamp.soccer_matches.dto.StateResponseDto;
 import com.NeoCamp.soccer_matches.entity.ClubEntity;
 import com.NeoCamp.soccer_matches.entity.StateEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class ClubMapper {
-    public static ClubEntity toEntity(ClubRequestDto dto, StateEntity state) {
-        return new ClubEntity(dto.getName(), state, dto.getCreationDate(), dto.getActive());
-    }
+@Mapper(componentModel = "spring", uses = StateMapper.class)
+public interface ClubMapper {
 
-    public static ClubResponseDto toDto(ClubEntity club) {
-        StateEntity state = club.getHomeState();
-        StateResponseDto stateDto = new StateResponseDto(state);
-        return new ClubResponseDto(club);
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "homeState", source = "state")
+    @Mapping(target = "name", source = "dto.name")
+    ClubEntity toEntity(ClubRequestDto dto, StateEntity state);
+
+    ClubResponseDto toDto(ClubEntity club);
 }

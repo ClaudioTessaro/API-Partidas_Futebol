@@ -1,18 +1,18 @@
-package com.NeoCamp.soccer_matches.mapper;
+package com.neocamp.soccer_matches.mapper;
 
 import com.NeoCamp.soccer_matches.dto.MatchRequestDto;
 import com.NeoCamp.soccer_matches.dto.MatchResponseDto;
 import com.NeoCamp.soccer_matches.entity.ClubEntity;
 import com.NeoCamp.soccer_matches.entity.StadiumEntity;
 import com.NeoCamp.soccer_matches.entity.MatchEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class MatchMapper {
-    public static MatchEntity toEntity(MatchRequestDto dto, ClubEntity homeClub, ClubEntity awayClub, StadiumEntity stadium) {
-        return new MatchEntity(homeClub, awayClub, dto.getHomeGoals(),
-                dto.getAwayGoals(), stadium, dto.getMatchDatetime());
-    }
+@Mapper (componentModel = "spring", uses = {ClubMapper.class, StadiumMapper.class})
+public interface MatchMapper {
 
-    public static MatchResponseDto toDto(MatchEntity match) {
-       return new MatchResponseDto(match);
-    }
+    @Mapping(target = "id", ignore = true)
+    MatchEntity toEntity(MatchRequestDto dto, ClubEntity homeClub, ClubEntity awayClub, StadiumEntity stadium);
+
+    MatchResponseDto toDto(MatchEntity match);
 }
