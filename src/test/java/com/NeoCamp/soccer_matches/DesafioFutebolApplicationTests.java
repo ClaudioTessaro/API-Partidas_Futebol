@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches;
+package com.neocamp.soccer_matches;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

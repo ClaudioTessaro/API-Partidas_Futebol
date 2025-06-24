@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches;
+package com.neocamp.soccer_matches;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
