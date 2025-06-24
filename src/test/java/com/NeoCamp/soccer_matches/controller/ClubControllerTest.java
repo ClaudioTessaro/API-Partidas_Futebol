@@ -3,8 +3,10 @@ package com.neocamp.soccer_matches.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neocamp.soccer_matches.dto.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.StateResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
 import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
+import com.neocamp.soccer_matches.testUtils.StateMockUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -21,8 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -190,5 +191,47 @@ public class ClubControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturn200AndClubDetails_whenUpdateValidClub() throws Exception {
+        ClubRequestDto requestDto = ClubMockUtils.customRequestDto("oldName", "RO",
+                LocalDate.now(), true);
+
+        StateResponseDto rjDto = StateMockUtils.rjDto();
+        ClubResponseDto responseDto = ClubMockUtils.customResponseDto("newName", rjDto,
+                LocalDate.of(2020, 6, 18), false);
+        responseDto.setId(5L);
+
+        Mockito.when(clubService.update(5L, requestDto)).thenReturn(responseDto);
+
+        mockMvc.perform(put("/clubs/5")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(5))
+                .andExpect(jsonPath("$.name").value("newName"))
+                .andExpect(jsonPath("$.active").value(false));
+    }
+
+    @Test
+    public void shouldReturn204_whenDeleteClub() throws Exception {
+        Long id = 19L;
+
+        mockMvc.perform(delete("/clubs/{id}", id))
+                .andExpect(status().isNoContent());
+
+        Mockito.verify(clubService, Mockito.times(1)).delete(id);
+    }
+
+    @Test
+    public void shouldReturn404_whenDeleteWithInvalidId() throws Exception {
+        Long invalidId = -1L;
+
+        Mockito.doThrow(new EntityNotFoundException("Club not found: " + invalidId))
+                .when(clubService).delete(invalidId);
+
+        mockMvc.perform(delete("/clubs/{id}", invalidId))
+                .andExpect(status().isNotFound());
     }
 }
