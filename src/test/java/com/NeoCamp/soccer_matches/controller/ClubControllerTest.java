@@ -3,12 +3,14 @@ package com.neocamp.soccer_matches.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.state.StateResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
 import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
 import com.neocamp.soccer_matches.testUtils.StateMockUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,6 +168,19 @@ public class ClubControllerTest {
         mockMvc.perform(get("/clubs/-1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Club not found"));
+    }
+
+    @Test
+    public void shouldReturn200AndClubStats_whenGetClubStatsWithValidId() throws Exception {
+        ClubStatsResponseDto mockStats = new ClubStatsResponseDto(8L, "Club",
+                8L, 4L, 2L, 14L, 9L);
+
+        Mockito.when(clubService.getClubStats(8L)).thenReturn(mockStats);
+
+        mockMvc.perform(get("/clubs/8/stats"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.clubName").value("Club"))
+                .andExpect(jsonPath("$.clubId").value(8L));
     }
 
     @Test

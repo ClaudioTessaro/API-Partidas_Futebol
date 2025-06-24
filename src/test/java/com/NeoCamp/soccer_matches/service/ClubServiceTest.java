@@ -2,12 +2,14 @@ package com.neocamp.soccer_matches.service;
 
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
 import com.neocamp.soccer_matches.enums.StateCode;
 import com.neocamp.soccer_matches.exception.BusinessException;
 import com.neocamp.soccer_matches.mapper.ClubMapper;
 import com.neocamp.soccer_matches.repository.ClubRepository;
+import com.neocamp.soccer_matches.repository.MatchRepository;
 import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
 import com.neocamp.soccer_matches.testUtils.StateMockUtils;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,13 +42,16 @@ public class ClubServiceTest {
     @Mock
     private ClubMapper clubMapper;
 
+    @Mock
+    private MatchRepository matchRepository;
+
     @InjectMocks
     private ClubService clubService;
 
     private final Pageable pageable = PageRequest.of(0, 10);
 
     @Test
-    public void shouldListAllClubs_WhenAllFiltersAreNull() {
+    public void shouldListAllClubs_whenAllFiltersAreNull() {
         ClubEntity gremio = ClubMockUtils.gremio();
         ClubEntity flamengo = ClubMockUtils.flamengo();
 
@@ -174,7 +179,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldReturnEmptyPage_WhenNoClubMatchFilters() {
+    public void shouldReturnEmptyPage_whenNoClubMatchFilters() {
         Mockito.when(clubRepository.listClubsByFilters("XXX", null, null, pageable))
                 .thenReturn(Page.empty(pageable));
 
@@ -202,7 +207,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInFindById_WhenInvalidId() {
+    public void shouldThrowExceptionInFindById_whenInvalidId() {
         Long invalidId = -2L;
         Mockito.when(clubRepository.findById(invalidId)).thenReturn(Optional.empty());
 
@@ -226,13 +231,31 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInFindEntityById_WhenInvalidId(){
+    public void shouldThrowExceptionInFindEntityById_whenInvalidId(){
         Long invalidId = -10L;
         Mockito.when(clubRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = Assertions.assertThrows(EntityNotFoundException.class,
                 () -> clubService.findEntityById(invalidId));
         Assertions.assertTrue(exception.getMessage().contains("Club not found: "));
+    }
+
+    @Test
+    public void shouldReturnClubStats_whenValidClubId() {
+        Long clubId = 10L;
+        ClubStatsResponseDto mockStats = new ClubStatsResponseDto(10L, "Grêmio",
+                5L, 9L, 8L, 11L, 15L);
+
+        ClubEntity gremio = ClubMockUtils.gremio();
+
+        Mockito.when(clubRepository.findById(clubId)).thenReturn(Optional.of(gremio));
+        Mockito.when(matchRepository.getClubStats(clubId)).thenReturn(mockStats);
+
+        ClubStatsResponseDto result = clubService.getClubStats(clubId);
+
+        Assertions.assertEquals(8, result.getTotalLosses());
+        Assertions.assertEquals("Grêmio", result.getClubName());
+        Assertions.assertEquals(11, result.getGoalsScored());
     }
 
     @Test
@@ -263,7 +286,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInSaveClub_WhenInvalidStateCode() {
+    public void shouldThrowExceptionInSaveClub_whenInvalidStateCode() {
         String invalidStateCode = "XXX";
         ClubRequestDto clubDto = ClubMockUtils.customRequestDto("club2",invalidStateCode,
                 LocalDate.of(2020, 3, 15), true);
@@ -309,7 +332,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInUpdateClub_WhenInvalidId(){
+    public void shouldThrowExceptionInUpdateClub_whenInvalidId(){
         Long invalidId = -1L;
         ClubRequestDto clubDto = ClubMockUtils.customRequestDto("club4", "RS",
                 LocalDate.of(2020, 3, 15), true);
@@ -323,7 +346,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionInUpdateClub_WhenInvalidStateCode() {
+    public void shouldThrowExceptionInUpdateClub_whenInvalidStateCode() {
         Long validId = 5L;
         String invalidStateCode = "YYY";
 
@@ -341,7 +364,7 @@ public class ClubServiceTest {
     }
 
     @Test
-    void shouldMarkClubAsInactive_WhenDeleteIsCalled() {
+    void shouldMarkClubAsInactive_whenDeleteIsCalled() {
         Long existingClubId = 11L;
         ClubEntity existingClub = new ClubEntity();
         existingClub.setId(existingClubId);
