@@ -2,12 +2,14 @@ package com.neocamp.soccer_matches.service;
 
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
 import com.neocamp.soccer_matches.enums.StateCode;
 import com.neocamp.soccer_matches.exception.BusinessException;
 import com.neocamp.soccer_matches.mapper.ClubMapper;
 import com.neocamp.soccer_matches.repository.ClubRepository;
+import com.neocamp.soccer_matches.repository.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final StateService stateService;
     private final ClubMapper clubMapper;
+    private final MatchRepository matchRepository;
 
     public Page<ClubResponseDto> listClubsByFilters(String name, String stateCode, Boolean active, Pageable pageable) {
         StateEntity homeState = null;
@@ -40,6 +43,11 @@ public class ClubService {
     public ClubEntity findEntityById(Long id) {
         return clubRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Club not found: " + id));
+    }
+
+    public ClubStatsResponseDto getClubStats(Long clubId) {
+        findEntityById(clubId);
+        return matchRepository.getClubStats(clubId);
     }
 
     public ClubResponseDto save(ClubRequestDto clubRequestDto) {
