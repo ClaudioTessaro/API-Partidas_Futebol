@@ -1,9 +1,13 @@
 package com.neocamp.soccer_matches.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neocamp.soccer_matches.dto.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.ClubResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
-import com.neocamp.soccer_matches.testUtils.ClubFactory;
+import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,15 +36,15 @@ public class ClubControllerTest {
 
     @MockitoBean
     private ClubService clubService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
-    public void shouldListAllClubs_WhenAllFiltersAreNull() throws Exception {
-        ClubResponseDto flamengo = ClubFactory.createValidClubResponseDto("Flamengo", "RJ",
-                LocalDate.now(), true);
-        ClubResponseDto gremio = ClubFactory.createValidClubResponseDto("Corinthians", "SP",
-                LocalDate.now(), true);
+    public void shouldReturnAllClubs_whenNoFiltersProvided() throws Exception {
+        ClubResponseDto flamengoDto = ClubMockUtils.flamengoResponseDto();
+        ClubResponseDto gremioDto = ClubMockUtils.gremioResponseDto();
 
-        Page<ClubResponseDto> clubs = new PageImpl<>(List.of(flamengo, gremio), pageable, 2);
+        Page<ClubResponseDto> clubs = new PageImpl<>(List.of(flamengoDto, gremioDto), pageable, 2);
 
         Mockito.when(clubService.listClubsByFilters(null, null, null, pageable)).thenReturn(clubs);
 
@@ -48,26 +53,142 @@ public class ClubControllerTest {
                         .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].name").value("Flamengo"))
-                .andExpect(jsonPath("$.content[1].name").value("Corinthians"));
+                .andExpect(jsonPath("$.content[1].name").value("Grêmio"));
     }
 
     @Test
-    public void shouldListClubsByName() throws Exception {
-        ClubResponseDto internacional = ClubFactory.createValidClubResponseDto("Internacional", "RS",
-                LocalDate.now(), true);
-        ClubResponseDto coritiba = ClubFactory.createValidClubResponseDto("Coritiba", "PR",
-                LocalDate.now(), true);
+    public void shouldReturn200AndClubList_whenFilteringByName() throws Exception {
+        ClubResponseDto flamengoDto = ClubMockUtils.flamengoResponseDto();
 
-        Page<ClubResponseDto> clubs = new PageImpl<>(List.of(internacional, coritiba), pageable, 2);
+        Page<ClubResponseDto> clubs = new PageImpl<>(List.of(flamengoDto), pageable, 1);
 
-        Mockito.when(clubService.listClubsByFilters("l", null, null, pageable)).thenReturn(clubs);
+        Mockito.when(clubService.listClubsByFilters("fla", null, null, pageable)).thenReturn(clubs);
 
         mockMvc.perform(get("/clubs")
-                .param("name", "l")
+                .param("name", "fla")
                 .param("page", "0")
                 .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(1))
-                .andExpect(jsonPath("$.content[0].name").value("Internacional"));
+                .andExpect(jsonPath("$.content[0].name").value("Flamengo"));
+    }
+
+    @Test
+    public void shouldReturn200AndClubList_whenFilteringByHomeState() throws Exception {
+        ClubResponseDto corinthiansDto = ClubMockUtils.corinthiansResponseDto();
+
+        Page<ClubResponseDto> clubs = new PageImpl<>(List.of(corinthiansDto), pageable, 1);
+
+        Mockito.when(clubService.listClubsByFilters(null, "SP", null, pageable))
+                .thenReturn(clubs);
+
+        mockMvc.perform(get("/clubs")
+                .param("stateCode", "SP")
+                .param("page", "0")
+                .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].name").value("Corinthians"));
+    }
+
+    @Test
+    public void shouldReturn200AndClubList_whenFilteringByActive() throws Exception {
+        ClubResponseDto gremioDto = ClubMockUtils.gremioResponseDto();
+        gremioDto.setActive(true);
+
+        Page<ClubResponseDto> clubs = new PageImpl<>(List.of(gremioDto), pageable, 1);
+
+        Mockito.when(clubService.listClubsByFilters(null, null, true, pageable))
+                .thenReturn(clubs);
+
+        mockMvc.perform(get("/clubs")
+                .param("active", "true")
+                .param("page", "0")
+                .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].name").value("Grêmio"));
+    }
+
+    @Test
+    public void shouldReturn200AndClubList_whenFilteringByNameAndHomeStateAndActive() throws Exception {
+        ClubResponseDto corinthiansDto = ClubMockUtils.corinthiansResponseDto();
+
+        Page<ClubResponseDto> clubs = new PageImpl<>(List.of(corinthiansDto), pageable, 1);
+
+        Mockito.when(clubService.listClubsByFilters("cor", "SP", true, pageable))
+                .thenReturn(clubs);
+
+        mockMvc.perform(get("/clubs")
+                .param("name", "cor")
+                .param("stateCode", "SP")
+                .param("active", "true")
+                .param("page", "0")
+                .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].name").value("Corinthians"));
+    }
+
+    @Test
+    public void shouldReturn200AndEmptyList_whenInvalidStateCode() throws Exception {
+        Page<ClubResponseDto> emptyClubs = new PageImpl<>(List.of(), pageable, 0);
+
+        Mockito.when(clubService.listClubsByFilters(null, "XX", null, pageable))
+                .thenReturn(emptyClubs);
+
+        mockMvc.perform(get("/clubs")
+                .param("stateCode", "XX")
+                .param("page", "0")
+                .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(0));
+    }
+
+    @Test
+    public void shouldReturn200AndClubDetails_whenFindById() throws Exception {
+        ClubResponseDto gremioDto = ClubMockUtils.gremioResponseDto();
+        gremioDto.setId(1L);
+
+        Mockito.when(clubService.findById(1L)).thenReturn(gremioDto);
+
+        mockMvc.perform(get("/clubs/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Grêmio"));
+    }
+
+    @Test
+    public void shouldReturn404_whenFindByIdWithInvalidId() throws Exception {
+        Mockito.when(clubService.findById(-1L)).thenThrow(new EntityNotFoundException("Club not found"));
+
+        mockMvc.perform(get("/clubs/-1"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Club not found"));
+    }
+
+    @Test
+    public void shouldReturn201AndClubDetails_whenCreateValidClub() throws Exception {
+        ClubRequestDto gremioRequestDto = ClubMockUtils.gremioRequestDto();
+        ClubResponseDto gremioResponseDto = ClubMockUtils.gremioResponseDto();
+
+        Mockito.when(clubService.save(gremioRequestDto)).thenReturn(gremioResponseDto);
+
+        mockMvc.perform(post("/clubs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(gremioRequestDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Grêmio"));
+    }
+
+    @Test
+    public void shouldReturn400_whenCreateWithMissingParameter() throws Exception {
+        ClubRequestDto invalidDto = ClubMockUtils.customRequestDto(null, "TO",
+                LocalDate.now(), true);
+
+        mockMvc.perform(post("/clubs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidDto)))
+                .andExpect(status().isBadRequest());
     }
 }
