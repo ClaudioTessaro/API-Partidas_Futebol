@@ -1,8 +1,8 @@
 package com.neocamp.soccer_matches.testUtils;
 
-import com.neocamp.soccer_matches.dto.ClubRequestDto;
-import com.neocamp.soccer_matches.dto.ClubResponseDto;
-import com.neocamp.soccer_matches.dto.StateResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
+import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.state.StateResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
 

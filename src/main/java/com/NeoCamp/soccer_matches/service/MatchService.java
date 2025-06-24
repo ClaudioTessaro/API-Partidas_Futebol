@@ -1,7 +1,7 @@
 package com.neocamp.soccer_matches.service;
 
-import com.neocamp.soccer_matches.dto.MatchRequestDto;
-import com.neocamp.soccer_matches.dto.MatchResponseDto;
+import com.neocamp.soccer_matches.dto.match.MatchRequestDto;
+import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StadiumEntity;
 import com.neocamp.soccer_matches.entity.MatchEntity;

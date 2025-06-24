@@ -1,5 +1,6 @@
 package com.neocamp.soccer_matches.dto.club;
 
+import com.neocamp.soccer_matches.dto.state.StateResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;

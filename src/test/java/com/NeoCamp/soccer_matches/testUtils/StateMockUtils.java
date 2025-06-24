@@ -1,6 +1,6 @@
 package com.neocamp.soccer_matches.testUtils;
 
-import com.neocamp.soccer_matches.dto.StateResponseDto;
+import com.neocamp.soccer_matches.dto.state.StateResponseDto;
 import com.neocamp.soccer_matches.entity.StateEntity;
 import com.neocamp.soccer_matches.enums.StateCode;
 

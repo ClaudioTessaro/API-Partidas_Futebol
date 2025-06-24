@@ -2,8 +2,8 @@ package com.neocamp.soccer_matches.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
-import com.neocamp.soccer_matches.dto.ClubResponseDto;
-import com.neocamp.soccer_matches.dto.StateResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.state.StateResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
 import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
 import com.neocamp.soccer_matches.testUtils.StateMockUtils;

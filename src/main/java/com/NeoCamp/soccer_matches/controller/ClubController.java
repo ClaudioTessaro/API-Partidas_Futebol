@@ -1,7 +1,7 @@
 package com.neocamp.soccer_matches.controller;
 
-import com.neocamp.soccer_matches.dto.ClubRequestDto;
-import com.neocamp.soccer_matches.dto.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
+import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
