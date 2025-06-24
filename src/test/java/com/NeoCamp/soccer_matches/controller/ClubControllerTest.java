@@ -1,7 +1,7 @@
 package com.neocamp.soccer_matches.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.neocamp.soccer_matches.dto.ClubRequestDto;
+import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.StateResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ClubController.class)
 public class ClubControllerTest {
 
-    private Pageable pageable = PageRequest.of(0, 10);
+    private final Pageable pageable = PageRequest.of(0, 10);
 
     @Autowired
     private MockMvc mockMvc;

@@ -1,4 +1,4 @@
-package com.neocamp.soccer_matches.dto;
+package com.neocamp.soccer_matches.dto.match;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
