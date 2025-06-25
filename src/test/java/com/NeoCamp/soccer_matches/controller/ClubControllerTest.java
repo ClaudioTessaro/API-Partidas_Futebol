@@ -10,7 +10,6 @@ import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
 import com.neocamp.soccer_matches.testUtils.StateMockUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,7 +166,8 @@ public class ClubControllerTest {
 
         mockMvc.perform(get("/clubs/-1"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Club not found"));
+                .andExpect(jsonPath("$.message").value("Club not found"))
+                .andExpect(jsonPath("$.error").value("Not Found"));
     }
 
     @Test
