@@ -1,6 +1,7 @@
 package com.neocamp.soccer_matches.repository;
 
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.MatchEntity;
 import com.neocamp.soccer_matches.entity.StadiumEntity;
@@ -34,6 +35,7 @@ public class MatchRepositoryTest {
     private StateEntity rj;
     private StateEntity sp;
     private Long gremioId;
+    private Long corinthiansId;
     private Pageable pageable;
     @Autowired
     private StadiumRepository stadiumRepository;
@@ -58,6 +60,7 @@ public class MatchRepositoryTest {
         clubRepository.saveAll(List.of(gremio, flamengo, corinthians, inativo));
 
         gremioId = gremio.getId();
+        corinthiansId = corinthians.getId();
 
         StadiumEntity stadium1 = stadiumRepository.save(new StadiumEntity("Stadium1"));
         StadiumEntity stadium2 = stadiumRepository.save(new StadiumEntity("Stadium2"));
@@ -81,5 +84,17 @@ public class MatchRepositoryTest {
         Assertions.assertEquals(1, clubStats.getTotalDraws());
         Assertions.assertEquals(0, clubStats.getTotalLosses());
         Assertions.assertEquals(3, clubStats.getGoalsScored());
+    }
+
+    @Test
+    public void shouldCalculateClubVersusClubStats() {
+        ClubVersusClubStatsDto versusStats = matchRepository.getClubVersusClubStats(gremioId, corinthiansId);
+
+        Assertions.assertEquals("Grêmio", versusStats.getClubName());
+        Assertions.assertEquals("Corinthians", versusStats.getOpponentName());
+        Assertions.assertEquals(0, versusStats.getTotalWins());
+        Assertions.assertEquals(1, versusStats.getTotalDraws());
+        Assertions.assertEquals(0, versusStats.getTotalLosses());
+        Assertions.assertEquals(1, versusStats.getGoalsScored());
     }
 }

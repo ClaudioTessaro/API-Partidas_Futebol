@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.dto.state.StateResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
 import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
@@ -172,7 +173,9 @@ public class ClubControllerTest {
 
     @Test
     public void shouldReturn200AndClubStats_whenGetClubStatsWithValidId() throws Exception {
-        ClubStatsResponseDto mockStats = new ClubStatsResponseDto(8L, "Club",
+        Long clubId = 8L;
+
+        ClubStatsResponseDto mockStats = new ClubStatsResponseDto(clubId, "Club",
                 8L, 4L, 2L, 14L, 9L);
 
         Mockito.when(clubService.getClubStats(8L)).thenReturn(mockStats);
@@ -181,6 +184,24 @@ public class ClubControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.clubName").value("Club"))
                 .andExpect(jsonPath("$.clubId").value(8L));
+    }
+
+    @Test
+    public void shouldReturn200AndClubVersusClubStats_whenGetClubVersusClubStatsWithValidIds() throws Exception {
+        Long clubId = 12L;
+        Long opponentId = 23L;
+
+        ClubVersusClubStatsDto mockVersusStats = new ClubVersusClubStatsDto(clubId, "Coritiba", opponentId,
+                "Santos", 5L, 3L, 6L, 15L, 9L );
+
+        Mockito.when(clubService.getClubVersusClubStats(clubId, opponentId)).thenReturn(mockVersusStats);
+
+        mockMvc.perform(get("/clubs/12/versus/23"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.clubName").value("Coritiba"))
+                .andExpect(jsonPath("$.opponentName").value("Santos"))
+                .andExpect(jsonPath("$.totalWins").value(5L))
+                .andExpect(jsonPath("$.totalLosses").value(6L));
     }
 
     @Test
