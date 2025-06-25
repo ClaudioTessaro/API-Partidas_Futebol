@@ -13,17 +13,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClubRequestDto {
-    @NotBlank
-    @Size(min = 3, max = 100)
+    @NotBlank(message = "Field name is required")
+    @Size(min = 3, max = 100, message = "Field name must be between 3 and 100 characters")
     private String name;
 
-    @NotBlank
-    @Size(min = 2, max = 2)
+    @NotBlank(message = "Field state code is required")
+    @Size(min = 2, max = 2, message = "Field state code must have exactly 2 characters")
     private String stateCode;
 
-    @NotNull
+    @NotNull(message = "Field creation date is required")
     private LocalDate creationDate;
 
-    @NotNull
+    @NotNull (message = "Field active is required")
     private Boolean active;
 }

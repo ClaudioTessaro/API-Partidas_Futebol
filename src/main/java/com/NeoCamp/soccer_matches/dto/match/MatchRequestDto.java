@@ -13,23 +13,23 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MatchRequestDto {
 
-    @NotNull
+    @NotNull(message = "Field home club is required")
     private Long homeClubId;
 
-    @NotNull
+    @NotNull(message = "Field away club is required")
     private Long awayClubId;
 
-    @NotNull
+    @NotNull(message = "Field stadium is required")
     private Long stadiumId;
 
-    @NotNull
+    @NotNull(message = "Field match date and time is required")
     private LocalDateTime matchDatetime;
 
-    @NotNull
-    @Min(0)
+    @NotNull(message = "Field home goals is required")
+    @Min(value = 0, message = "Field home goals cannot be negative")
     private Integer homeGoals;
 
-    @NotNull
-    @Min(0)
+    @NotNull(message = "Field away goals is required")
+    @Min(value = 0, message = "Field home goals cannot be negative")
     private Integer awayGoals;
 }

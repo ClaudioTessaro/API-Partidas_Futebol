@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StadiumRequestDto {
 
-    @NotBlank
-    @Size(min = 3, max = 100)
+    @NotBlank(message = "Field name is required")
+    @Size(min = 3, max = 100, message = "Field name must be between 3 and 100 characters")
     private String name;
 }
