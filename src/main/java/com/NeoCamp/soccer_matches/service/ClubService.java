@@ -3,6 +3,7 @@ package com.neocamp.soccer_matches.service;
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
 import com.neocamp.soccer_matches.enums.StateCode;
@@ -48,6 +49,12 @@ public class ClubService {
     public ClubStatsResponseDto getClubStats(Long clubId) {
         findEntityById(clubId);
         return matchRepository.getClubStats(clubId);
+    }
+
+    public ClubVersusClubStatsDto getClubVersusClubStats(Long clubId,  Long opponentId) {
+        findEntityById(clubId);
+        findEntityById(opponentId);
+        return matchRepository.getClubVersusClubStats(clubId, opponentId);
     }
 
     public ClubResponseDto save(ClubRequestDto clubRequestDto) {

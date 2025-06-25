@@ -3,6 +3,7 @@ package com.neocamp.soccer_matches.controller;
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.service.ClubService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,17 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.OK).body(club);
     }
 
-    @GetMapping("{id}/stats")
+    @GetMapping("/{id}/stats")
     public ResponseEntity<ClubStatsResponseDto> getClubStats(@PathVariable Long id) {
         ClubStatsResponseDto clubStats = clubService.getClubStats(id);
         return ResponseEntity.status(HttpStatus.OK).body(clubStats);
+    }
+
+    @GetMapping("/{clubId}/versus/{opponentId}")
+    public ResponseEntity<ClubVersusClubStatsDto> getClubVersusClubStats(
+            @PathVariable Long clubId, @PathVariable Long opponentId) {
+        ClubVersusClubStatsDto versusStats = clubService.getClubVersusClubStats(clubId, opponentId);
+        return ResponseEntity.status(HttpStatus.OK).body(versusStats);
     }
 
     @PostMapping
