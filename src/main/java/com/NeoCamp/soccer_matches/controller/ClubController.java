@@ -1,7 +1,8 @@
 package com.neocamp.soccer_matches.controller;
 
-import com.neocamp.soccer_matches.dto.ClubRequestDto;
-import com.neocamp.soccer_matches.dto.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
+import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ public class ClubController {
     public ResponseEntity<ClubResponseDto> findById(@PathVariable Long id) {
         ClubResponseDto club = clubService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(club);
+    }
+
+    @GetMapping("{id}/stats")
+    public ResponseEntity<ClubStatsResponseDto> getClubStats(@PathVariable Long id) {
+        ClubStatsResponseDto clubStats = clubService.getClubStats(id);
+        return ResponseEntity.status(HttpStatus.OK).body(clubStats);
     }
 
     @PostMapping

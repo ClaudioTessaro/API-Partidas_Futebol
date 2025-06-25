@@ -1,7 +1,7 @@
 package com.neocamp.soccer_matches.mapper;
 
-import com.neocamp.soccer_matches.dto.StadiumRequestDto;
-import com.neocamp.soccer_matches.dto.StadiumResponseDto;
+import com.neocamp.soccer_matches.dto.stadium.StadiumRequestDto;
+import com.neocamp.soccer_matches.dto.stadium.StadiumResponseDto;
 import com.neocamp.soccer_matches.entity.StadiumEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

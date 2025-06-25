@@ -1,7 +1,7 @@
 package com.neocamp.soccer_matches.controller;
 
-import com.neocamp.soccer_matches.dto.MatchRequestDto;
-import com.neocamp.soccer_matches.dto.MatchResponseDto;
+import com.neocamp.soccer_matches.dto.match.MatchRequestDto;
+import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
 import com.neocamp.soccer_matches.service.MatchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

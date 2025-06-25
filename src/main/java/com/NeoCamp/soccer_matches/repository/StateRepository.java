@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface StateRepository extends JpaRepository<StateEntity, Long> {
-    public Optional<StateEntity> findByCode(StateCode code);
+    Optional<StateEntity> findByCode(StateCode code);
 }

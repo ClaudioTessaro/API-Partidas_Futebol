@@ -3,7 +3,6 @@ package com.neocamp.soccer_matches.repository;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
 import com.neocamp.soccer_matches.enums.StateCode;
-import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,10 +38,14 @@ public class ClubRepositoryTest {
         rj = stateRepository.findByCode(StateCode.RJ).orElseThrow(() -> new RuntimeException("State not found"));
         sp = stateRepository.findByCode(StateCode.SP).orElseThrow(() -> new RuntimeException("State not found"));
 
-        ClubEntity gremio = ClubMockUtils.gremio();
-        ClubEntity flamengo = ClubMockUtils.flamengo();
-        ClubEntity corinthians = ClubMockUtils.corinthians();
-        ClubEntity inativo = ClubMockUtils.inativoSp();
+        ClubEntity gremio = new ClubEntity("Grêmio", rs,
+                LocalDate.of(1945, 7, 23), true);
+        ClubEntity flamengo = new ClubEntity("Flamengo", rj,
+                LocalDate.of(1970, 2, 10), true);
+        ClubEntity corinthians = new ClubEntity("Corinthians", sp,
+                LocalDate.of(1930, 4, 19), true);
+        ClubEntity inativo = new ClubEntity("Inativo", sp,
+                LocalDate.of(1950, 9, 27), false);
 
         clubRepository.saveAll(List.of(gremio, flamengo, corinthians, inativo));
     }
@@ -52,7 +55,7 @@ public class ClubRepositoryTest {
         Page<ClubEntity> clubs = clubRepository.listClubsByFilters("l", null, null, pageable);
 
         Assertions.assertFalse(clubs.isEmpty());
-        Assertions.assertEquals(3, clubs.getTotalElements());
+        Assertions.assertEquals(1, clubs.getTotalElements());
         Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("l")));
     }
 
@@ -74,11 +77,11 @@ public class ClubRepositoryTest {
 
     @Test
     public void shouldFilterClubsByNameAndHomeState() {
-        Page<ClubEntity> clubs = clubRepository.listClubsByFilters("l", sp, null, pageable);
+        Page<ClubEntity> clubs = clubRepository.listClubsByFilters("i", sp, null, pageable);
 
         Assertions.assertFalse(clubs.isEmpty());
         Assertions.assertEquals(2, clubs.getTotalElements());
-        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("l")));
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("i")));
         Assertions.assertTrue(clubs.stream().allMatch(club -> club.getHomeState().equals(sp)));
     }
 
@@ -88,7 +91,7 @@ public class ClubRepositoryTest {
                 true, pageable);
 
         Assertions.assertFalse(clubs.isEmpty());
-        Assertions.assertEquals(1, clubs.getTotalElements());
+        Assertions.assertEquals(2, clubs.getTotalElements());
         Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("g")));
     }
 
@@ -104,11 +107,11 @@ public class ClubRepositoryTest {
 
     @Test
     public void shouldFilterClubsByNameAndHomeStateAndActive() {
-        Page<ClubEntity> clubs = clubRepository.listClubsByFilters("l", sp, true, pageable);
+        Page<ClubEntity> clubs = clubRepository.listClubsByFilters("in", sp, true, pageable);
 
         Assertions.assertFalse(clubs.isEmpty());
         Assertions.assertEquals(1, clubs.getTotalElements());
-        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("l")));
+        Assertions.assertTrue(clubs.stream().allMatch(club -> club.getName().toLowerCase().contains("in")));
         Assertions.assertTrue(clubs.stream().allMatch(club -> club.getHomeState().equals(sp)));
     }
 
