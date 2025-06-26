@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,7 +36,6 @@ public class MatchRepositoryTest {
     private StateEntity rj;
     private StateEntity sp;
     private Long gremioId;
-    private Long corinthiansId;
     private Pageable pageable;
     @Autowired
     private StadiumRepository stadiumRepository;
@@ -60,7 +60,6 @@ public class MatchRepositoryTest {
         clubRepository.saveAll(List.of(gremio, flamengo, corinthians, inativo));
 
         gremioId = gremio.getId();
-        corinthiansId = corinthians.getId();
 
         StadiumEntity stadium1 = stadiumRepository.save(new StadiumEntity("Stadium1"));
         StadiumEntity stadium2 = stadiumRepository.save(new StadiumEntity("Stadium2"));
@@ -87,14 +86,10 @@ public class MatchRepositoryTest {
     }
 
     @Test
-    public void shouldCalculateClubVersusClubStats() {
-        ClubVersusClubStatsDto versusStats = matchRepository.getClubVersusClubStats(gremioId, corinthiansId);
+    public void shouldCalculateClubVersusOpponentsStats() {
+        List<ClubVersusClubStatsDto> statsList = matchRepository.getClubVersusOpponentsStats(gremioId);
 
-        Assertions.assertEquals("Grêmio", versusStats.getClubName());
-        Assertions.assertEquals("Corinthians", versusStats.getOpponentName());
-        Assertions.assertEquals(0, versusStats.getTotalWins());
-        Assertions.assertEquals(1, versusStats.getTotalDraws());
-        Assertions.assertEquals(0, versusStats.getTotalLosses());
-        Assertions.assertEquals(1, versusStats.getGoalsScored());
+        Assertions.assertEquals(2, statsList.size());
+        assertThat(statsList).extracting(ClubVersusClubStatsDto::getOpponentName).contains("Corinthians", "Flamengo");
     }
 }

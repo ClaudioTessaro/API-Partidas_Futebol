@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/clubs")
@@ -42,12 +44,15 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.OK).body(clubStats);
     }
 
-    @GetMapping("/{clubId}/versus/{opponentId}")
-    public ResponseEntity<ClubVersusClubStatsDto> getClubVersusClubStats(
-            @PathVariable Long clubId, @PathVariable Long opponentId) {
-        ClubVersusClubStatsDto versusStats = clubService.getClubVersusClubStats(clubId, opponentId);
-        return ResponseEntity.status(HttpStatus.OK).body(versusStats);
+    @GetMapping("/{id}/opponents/stats")
+    public ResponseEntity<List<ClubVersusClubStatsDto>> getClubVersusOpponentsStats(@PathVariable Long id) {
+        List<ClubVersusClubStatsDto> opponentsStats = clubService.getClubVersusOpponentsStats(id);
+        return ResponseEntity.status(HttpStatus.OK).body(opponentsStats);
     }
+
+    //@GetMapping(/{clubId}/head-to-head/{opponentId})
+   // public
+
 
     @PostMapping
     public ResponseEntity<ClubResponseDto> create(@RequestBody @Valid ClubRequestDto dto) {

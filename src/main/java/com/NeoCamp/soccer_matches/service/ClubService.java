@@ -17,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ClubService {
@@ -46,15 +48,14 @@ public class ClubService {
                 .orElseThrow(() -> new EntityNotFoundException("Club not found: " + id));
     }
 
-    public ClubStatsResponseDto getClubStats(Long clubId) {
-        findEntityById(clubId);
-        return matchRepository.getClubStats(clubId);
+    public ClubStatsResponseDto getClubStats(Long id) {
+        findEntityById(id);
+        return matchRepository.getClubStats(id);
     }
 
-    public ClubVersusClubStatsDto getClubVersusClubStats(Long clubId,  Long opponentId) {
-        findEntityById(clubId);
-        findEntityById(opponentId);
-        return matchRepository.getClubVersusClubStats(clubId, opponentId);
+    public List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(Long id) {
+        findEntityById(id);
+        return matchRepository.getClubVersusOpponentsStats(id);
     }
 
     public ClubResponseDto save(ClubRequestDto clubRequestDto) {

@@ -187,21 +187,22 @@ public class ClubControllerTest {
     }
 
     @Test
-    public void shouldReturn200AndClubVersusClubStats_whenGetClubVersusClubStatsWithValidIds() throws Exception {
-        Long clubId = 12L;
-        Long opponentId = 23L;
+    public void shouldReturn200AndStatsAgainstAllOpponents() throws Exception {
+        Long id = 12L;
 
-        ClubVersusClubStatsDto mockVersusStats = new ClubVersusClubStatsDto(clubId, "Coritiba", opponentId,
+        ClubVersusClubStatsDto mockOpponentsStats1 = new ClubVersusClubStatsDto(id, "Coritiba", 1L,
                 "Santos", 5L, 3L, 6L, 15L, 9L );
 
-        Mockito.when(clubService.getClubVersusClubStats(clubId, opponentId)).thenReturn(mockVersusStats);
+        List<ClubVersusClubStatsDto> statsList = List.of(mockOpponentsStats1);
 
-        mockMvc.perform(get("/clubs/12/versus/23"))
+        Mockito.when(clubService.getClubVersusOpponentsStats(id)).thenReturn(statsList);
+
+        mockMvc.perform(get("/clubs/{id}/opponents/stats", id))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.clubName").value("Coritiba"))
-                .andExpect(jsonPath("$.opponentName").value("Santos"))
-                .andExpect(jsonPath("$.totalWins").value(5L))
-                .andExpect(jsonPath("$.totalLosses").value(6L));
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].clubName").value("Coritiba"))
+                .andExpect(jsonPath("$[0].opponentName").value("Santos"))
+                .andExpect(jsonPath("$[0].totalWins").value(5L));
     }
 
     @Test
