@@ -260,26 +260,24 @@ public class ClubServiceTest {
     }
 
     @Test
-    public void shouldReturnClubVersusClubStats_whenValidClubIds() {
-        Long clubId = 15L;
-        Long opponentId = 2L;
+    public void shouldReturnClubVersusOpponentsStats_whenValidClubId() {
+        Long id = 15L;
 
-        ClubVersusClubStatsDto mockVersusStats = new ClubVersusClubStatsDto(clubId, "Grêmio", opponentId,
+        ClubVersusClubStatsDto mockOpponentStats = new ClubVersusClubStatsDto(id, "Grêmio", 8L,
                 "Flamengo", 3L, 1L, 4L, 15L, 17L);
 
+        List<ClubVersusClubStatsDto> statsList = List.of(mockOpponentStats);
+
         ClubEntity gremio = ClubMockUtils.gremio();
-        ClubEntity flamengo = ClubMockUtils.flamengo();
-        Mockito.when(clubRepository.findById(clubId)).thenReturn(Optional.of(gremio));
-        Mockito.when(clubRepository.findById(opponentId)).thenReturn(Optional.of(flamengo));
-        Mockito.when(matchRepository.getClubVersusClubStats(clubId, opponentId)).thenReturn(mockVersusStats);
+        Mockito.when(clubRepository.findById(id)).thenReturn(Optional.of(gremio));
+        Mockito.when(matchRepository.getClubVersusOpponentsStats(id)).thenReturn(statsList);
 
-        ClubVersusClubStatsDto result = clubService.getClubVersusClubStats(clubId, opponentId);
+        List<ClubVersusClubStatsDto> result = clubService.getClubVersusOpponentsStats(id);
 
-        Assertions.assertEquals("Grêmio", result.getClubName());
-        Assertions.assertEquals("Flamengo", result.getOpponentName());
-        Assertions.assertEquals(15, result.getGoalsScored());
-        Assertions.assertEquals(17, result.getGoalsConceded());
-        Assertions.assertEquals(3L, result.getTotalWins());
+        Assertions.assertEquals(statsList, result);
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals("Flamengo", result.getFirst().getOpponentName());
+        Assertions.assertEquals(15, result.getFirst().getGoalsScored());
     }
 
     @Test
