@@ -3,6 +3,7 @@ package com.neocamp.soccer_matches.service;
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
+import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
 import com.neocamp.soccer_matches.enums.StateCode;
@@ -243,7 +244,7 @@ public class ClubServiceTest {
     @Test
     public void shouldReturnClubStats_whenValidClubId() {
         Long clubId = 10L;
-        ClubStatsResponseDto mockStats = new ClubStatsResponseDto(10L, "Grêmio",
+        ClubStatsResponseDto mockStats = new ClubStatsResponseDto(clubId, "Grêmio",
                 5L, 9L, 8L, 11L, 15L);
 
         ClubEntity gremio = ClubMockUtils.gremio();
@@ -256,6 +257,29 @@ public class ClubServiceTest {
         Assertions.assertEquals(8, result.getTotalLosses());
         Assertions.assertEquals("Grêmio", result.getClubName());
         Assertions.assertEquals(11, result.getGoalsScored());
+    }
+
+    @Test
+    public void shouldReturnClubVersusClubStats_whenValidClubIds() {
+        Long clubId = 15L;
+        Long opponentId = 2L;
+
+        ClubVersusClubStatsDto mockVersusStats = new ClubVersusClubStatsDto(clubId, "Grêmio", opponentId,
+                "Flamengo", 3L, 1L, 4L, 15L, 17L);
+
+        ClubEntity gremio = ClubMockUtils.gremio();
+        ClubEntity flamengo = ClubMockUtils.flamengo();
+        Mockito.when(clubRepository.findById(clubId)).thenReturn(Optional.of(gremio));
+        Mockito.when(clubRepository.findById(opponentId)).thenReturn(Optional.of(flamengo));
+        Mockito.when(matchRepository.getClubVersusClubStats(clubId, opponentId)).thenReturn(mockVersusStats);
+
+        ClubVersusClubStatsDto result = clubService.getClubVersusClubStats(clubId, opponentId);
+
+        Assertions.assertEquals("Grêmio", result.getClubName());
+        Assertions.assertEquals("Flamengo", result.getOpponentName());
+        Assertions.assertEquals(15, result.getGoalsScored());
+        Assertions.assertEquals(17, result.getGoalsConceded());
+        Assertions.assertEquals(3L, result.getTotalWins());
     }
 
     @Test
