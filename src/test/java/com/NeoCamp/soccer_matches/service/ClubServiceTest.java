@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -54,7 +53,7 @@ public class ClubServiceTest {
     private ClubEntity gremioEntity, flamengoEntity, corinthiansEntity;
     private ClubRequestDto gremioRequestDto;
     private ClubResponseDto gremioResponseDto, flamengoResponseDto, corinthiansResponseDto;
-    private StateEntity rs, rj, sp;
+    private StateEntity rs, rj;
 
     @BeforeEach
     public void setUp() {
@@ -72,7 +71,6 @@ public class ClubServiceTest {
 
         rs = StateMockUtils.rs();
         rj = StateMockUtils.rj();
-        sp = StateMockUtils.sp();
     }
 
     @Test
