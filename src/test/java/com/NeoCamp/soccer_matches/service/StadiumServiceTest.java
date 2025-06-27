@@ -117,6 +117,9 @@ public class StadiumServiceTest {
 
     @Test
     public void shouldSaveStadiumSuccessfully() {
+        maracanaEntity.setId(2L);
+        maracanaResponseDto.setId(2L);
+
         Mockito.when(stadiumMapper.toEntity(maracanaRequestDto)).thenReturn(maracanaEntity);
         Mockito.when(stadiumRepository.save(maracanaEntity)).thenReturn(maracanaEntity);
         Mockito.when(stadiumMapper.toDto(maracanaEntity)).thenReturn(maracanaResponseDto);
@@ -124,8 +127,8 @@ public class StadiumServiceTest {
         StadiumResponseDto result = stadiumService.save(maracanaRequestDto);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(maracanaResponseDto.getName(), result.getName());
-        Assertions.assertEquals(maracanaResponseDto.getId(), result.getId());
+        Assertions.assertEquals("Maracanã", result.getName());
+        Assertions.assertEquals(2L, result.getId());
     }
 
     @Test
