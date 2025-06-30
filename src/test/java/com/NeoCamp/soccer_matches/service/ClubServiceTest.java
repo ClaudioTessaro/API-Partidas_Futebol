@@ -169,7 +169,8 @@ public class ClubServiceTest {
                 .thenReturn(clubs);
         Mockito.when(clubMapper.toDto(flamengoEntity)).thenReturn(flamengoResponseDto);
 
-        Page<ClubResponseDto> result = clubService.listClubsByFilters("Flamengo", "RJ", true, pageable);
+        Page<ClubResponseDto> result = clubService.listClubsByFilters("Flamengo", "RJ",
+                true, pageable);
 
         Assertions.assertEquals(1, result.getTotalElements());
         Assertions.assertEquals("Flamengo", result.getContent().getFirst().getName());
@@ -182,7 +183,8 @@ public class ClubServiceTest {
         Mockito.when(clubRepository.listClubsByFilters("XXX", null, null, pageable))
                 .thenReturn(Page.empty(pageable));
 
-        Page<ClubResponseDto> result = clubService.listClubsByFilters("XXX", null, null, pageable);
+        Page<ClubResponseDto> result = clubService.listClubsByFilters("XXX", null, null,
+                pageable);
 
         Assertions.assertTrue(result.isEmpty());
     }

@@ -6,11 +6,11 @@ import com.neocamp.soccer_matches.entity.StadiumEntity;
 
 public class StadiumMockUtils {
     public static StadiumEntity maracana() {
-        return new StadiumEntity("Maracanã");
+        return new StadiumEntity(2L, "Maracanã");
     }
 
     public static StadiumEntity morumbi() {
-        return new StadiumEntity("Morumbi");
+        return new StadiumEntity(3L, "Morumbi");
     }
 
     public static StadiumEntity custom(String name) {

@@ -16,7 +16,7 @@ public class MatchMockUtils {
         ClubEntity flamengo = ClubMockUtils.flamengo();
         ClubEntity corinthians = ClubMockUtils.corinthians();
         StadiumEntity maracana = StadiumMockUtils.maracana();
-        return new MatchEntity(corinthians, flamengo, 1, 2,
+        return new MatchEntity(flamengo, corinthians, 1, 2,
                 maracana, LocalDateTime.of(2020, 1, 1, 12, 40));
     }
 
