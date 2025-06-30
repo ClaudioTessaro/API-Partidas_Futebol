@@ -40,14 +40,11 @@ public class ClubControllerIntegrationTest {
     @Autowired
     private StateRepository stateRepository;
 
-    private ClubEntity gremio;
-    private ClubEntity flamengo;
-    private ClubEntity inactiveClub;
+    private ClubEntity gremio, flamengo, inactiveClub;
 
     @BeforeEach
     public void setup() {
         StateEntity rs = StateTestUtils.getStateOrFail(stateRepository, StateCode.RS);
-
         StateEntity rj = StateTestUtils.getStateOrFail(stateRepository, StateCode.RJ);
 
         gremio = new ClubEntity("Grêmio", rs,
@@ -69,7 +66,7 @@ public class ClubControllerIntegrationTest {
                 .param("page", "0")
                 .param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content.length()").value(3))
                 .andExpect(jsonPath("$.content[0].id").value(gremio.getId()))
                 .andExpect(jsonPath("$.content[0].name").value("Grêmio"))
                 .andExpect(jsonPath("$.content[1].id").value(flamengo.getId()));
@@ -127,9 +124,7 @@ public class ClubControllerIntegrationTest {
 
     @Test
     public void shouldGetClubById() throws Exception {
-        mockMvc.perform(get("/clubs/" + flamengo.getId())
-                .param("page", "0")
-                .param("size", "10"))
+        mockMvc.perform(get("/clubs/{id}", flamengo.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Flamengo"))
                 .andExpect(jsonPath("$.id").value(flamengo.getId()));
@@ -139,9 +134,7 @@ public class ClubControllerIntegrationTest {
     public void shouldReturn404_whenGetClubNonExistent() throws Exception {
         Long invalidId = -1L;
 
-        mockMvc.perform(get("/clubs/{id}",invalidId)
-                .param("page", "0")
-                .param("size", "10"))
+        mockMvc.perform(get("/clubs/{id}",invalidId))
                 .andExpect(status().isNotFound());
     }
 
@@ -152,11 +145,11 @@ public class ClubControllerIntegrationTest {
         LocalDate creationDate = LocalDate.of(2020, 1, 1);
         Boolean active = true;
 
-        ClubRequestDto clubRequestDto = new ClubRequestDto(name, stateCode, creationDate, active);
+        ClubRequestDto RequestDto = new ClubRequestDto(name, stateCode, creationDate, active);
 
         mockMvc.perform(post("/clubs")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(clubRequestDto)))
+                .content(objectMapper.writeValueAsString(RequestDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.creationDate").value(creationDate.toString()))
@@ -177,13 +170,15 @@ public class ClubControllerIntegrationTest {
 
     @Test
     public void shouldUpdateClub() throws Exception {
+        Long toBeUpdatedId = gremio.getId();
+
         String newName = "Coritiba";
         String newStateCode = "PR";
         LocalDate newCreationDate = LocalDate.of(2020, 1, 1);
         Boolean active = true;
         ClubRequestDto updateRequest = new ClubRequestDto(newName, newStateCode, newCreationDate, active);
 
-        mockMvc.perform(put("/clubs/{id}", gremio.getId())
+        mockMvc.perform(put("/clubs/{id}", toBeUpdatedId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
