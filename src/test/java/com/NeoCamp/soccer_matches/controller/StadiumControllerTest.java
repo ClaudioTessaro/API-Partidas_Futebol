@@ -96,7 +96,7 @@ public class StadiumControllerTest {
 
     @Test
     public void shouldReturn400_whenCreateWithMissingParameter() throws Exception {
-        StadiumRequestDto invalidDto = StadiumMockUtils.customRequestDto(null);
+        StadiumRequestDto invalidDto = StadiumMockUtils.customRequest(null);
 
         mockMvc.perform(post("/stadiums")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,8 +108,8 @@ public class StadiumControllerTest {
     public void shouldReturn200AndStadiumDetails_whenUpdateValidStadium() throws Exception {
         Long stadiumId = 1L;
 
-        StadiumRequestDto updateRequestDto = StadiumMockUtils.customRequestDto("Beira-Rio");
-        StadiumResponseDto updatedResponseDto = StadiumMockUtils.customResponseDto("Beira-Rio");
+        StadiumRequestDto updateRequestDto = StadiumMockUtils.customRequest("Beira-Rio");
+        StadiumResponseDto updatedResponseDto = StadiumMockUtils.customResponse("Beira-Rio");
         updatedResponseDto.setId(stadiumId);
 
         Mockito.when(stadiumService.update(stadiumId, updateRequestDto)).thenReturn(updatedResponseDto);

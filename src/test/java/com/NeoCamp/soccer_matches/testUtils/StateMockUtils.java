@@ -34,7 +34,7 @@ public class StateMockUtils {
         return new StateResponseDto(3L,"Rio de Janeiro", "RJ");
     }
 
-    public static StateResponseDto custom(String name, String stateCode) {
+    public static StateResponseDto customResponse(String name, String stateCode) {
         return new StateResponseDto(null, name, stateCode);
     }
 }
