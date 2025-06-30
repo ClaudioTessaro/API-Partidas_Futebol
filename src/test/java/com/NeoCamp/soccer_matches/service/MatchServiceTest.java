@@ -1,6 +1,5 @@
 package com.neocamp.soccer_matches.service;
 
-import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.match.MatchRequestDto;
 import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
@@ -27,7 +26,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,10 +48,9 @@ public class MatchServiceTest {
 
     private Pageable pageable;
     private ClubEntity corinthiansEntity, flamengoEntity, gremioEntity;
-    private ClubRequestDto corinthiansRequestDto, flamengoRequestDto, gremioRequestDto;
-    private ClubResponseDto corinthiansResponseDto, flamengoResponseDto, gremioResponseDto;
+    private ClubResponseDto flamengoResponseDto, gremioResponseDto;
     private StadiumEntity maracanaEntity, morumbiEntity;
-    private StadiumResponseDto maracanaResponseDto, morumbiResponseDto;
+    private StadiumResponseDto morumbiResponseDto;
     private MatchEntity flamengoVsCorinthiansAtMaracana, corinthiansVsGremioAtMorumbi;
     private MatchRequestDto flamengoVsCorinthiansRequestDto, corinthiansVsGremioRequestDto;
     private MatchResponseDto flamengoVsCorinthiansResponseDto, corinthiansVsGremioResponseDto;
@@ -66,18 +63,12 @@ public class MatchServiceTest {
         flamengoEntity = ClubMockUtils.flamengo();
         gremioEntity = ClubMockUtils.gremio();
 
-        corinthiansRequestDto = ClubMockUtils.corinthiansRequestDto();
-        flamengoRequestDto = ClubMockUtils.flamengoRequestDto();
-        gremioRequestDto = ClubMockUtils.gremioRequestDto();
-
-        corinthiansResponseDto = ClubMockUtils.corinthiansResponseDto();
         flamengoResponseDto = ClubMockUtils.flamengoResponseDto();
         gremioResponseDto = ClubMockUtils.gremioResponseDto();
 
         maracanaEntity = StadiumMockUtils.maracana();
         morumbiEntity = StadiumMockUtils.morumbi();
 
-        maracanaResponseDto = StadiumMockUtils.maracanaResponseDto();
         morumbiResponseDto = StadiumMockUtils.morumbiResponseDto();
 
         flamengoVsCorinthiansAtMaracana = MatchMockUtils.flamengoVsCorinthiansAtMaracana();

@@ -25,8 +25,6 @@ public class ClubRepositoryTest {
     private StateRepository stateRepository;
 
 
-    private StateEntity rs;
-    private StateEntity rj;
     private StateEntity sp;
     private Pageable pageable;
 
@@ -34,8 +32,8 @@ public class ClubRepositoryTest {
     public void setup() {
         pageable = PageRequest.of(0, 10);
 
-        rs = stateRepository.findByCode(StateCode.RS).orElseThrow(() -> new RuntimeException("State not found"));
-        rj = stateRepository.findByCode(StateCode.RJ).orElseThrow(() -> new RuntimeException("State not found"));
+        StateEntity rs = stateRepository.findByCode(StateCode.RS).orElseThrow(() -> new RuntimeException("State not found"));
+        StateEntity rj = stateRepository.findByCode(StateCode.RJ).orElseThrow(() -> new RuntimeException("State not found"));
         sp = stateRepository.findByCode(StateCode.SP).orElseThrow(() -> new RuntimeException("State not found"));
 
         ClubEntity gremio = new ClubEntity("Grêmio", rs,
