@@ -50,7 +50,7 @@ public class ClubMockUtils {
                 LocalDate.of(1930, 4, 19), true);
     }
 
-    public static ClubResponseDto customResponseDto(String name, StateResponseDto homeState,
+    public static ClubResponseDto customResponse(String name, StateResponseDto homeState,
                                                LocalDate creationDate, Boolean active) {
         return new ClubResponseDto(null, name, homeState, creationDate, active);
     }
@@ -71,7 +71,7 @@ public class ClubMockUtils {
                 LocalDate.of(1920, 6, 23), true);
     }
 
-    public static ClubRequestDto customRequestDto(String name, String stateCode, LocalDate creationDate, Boolean active) {
+    public static ClubRequestDto customRequest(String name, String stateCode, LocalDate creationDate, Boolean active) {
         return new ClubRequestDto(name, stateCode, creationDate, active);
     }
 }

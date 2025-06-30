@@ -37,10 +37,11 @@ public class ClubControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
-    private ClubService clubService;
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private ClubService clubService;
 
     @Test
     public void shouldReturnAllClubs_whenNoFiltersProvided() throws Exception {
@@ -150,22 +151,23 @@ public class ClubControllerTest {
 
     @Test
     public void shouldReturn200AndClubDetails_whenFindById() throws Exception {
+        Long clubId = 1L;
         ClubResponseDto gremioDto = ClubMockUtils.gremioResponseDto();
-        gremioDto.setId(1L);
 
-        Mockito.when(clubService.findById(1L)).thenReturn(gremioDto);
+        Mockito.when(clubService.findById(clubId)).thenReturn(gremioDto);
 
-        mockMvc.perform(get("/clubs/1"))
+        mockMvc.perform(get("/clubs/{id}", clubId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(clubId))
                 .andExpect(jsonPath("$.name").value("Grêmio"));
     }
 
     @Test
     public void shouldReturn404_whenFindByIdWithInvalidId() throws Exception {
-        Mockito.when(clubService.findById(-1L)).thenThrow(new EntityNotFoundException("Club not found"));
+        Long invalidId = -1L;
+        Mockito.when(clubService.findById(invalidId)).thenThrow(new EntityNotFoundException("Club not found"));
 
-        mockMvc.perform(get("/clubs/-1"))
+        mockMvc.perform(get("/clubs/{id}", invalidId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Club not found"))
                 .andExpect(jsonPath("$.error").value("Not Found"));
@@ -221,7 +223,7 @@ public class ClubControllerTest {
 
     @Test
     public void shouldReturn400_whenCreateWithMissingParameter() throws Exception {
-        ClubRequestDto invalidDto = ClubMockUtils.customRequestDto(null, "TO",
+        ClubRequestDto invalidDto = ClubMockUtils.customRequest(null, "TO",
                 LocalDate.now(), true);
 
         mockMvc.perform(post("/clubs")
@@ -232,23 +234,24 @@ public class ClubControllerTest {
 
     @Test
     public void shouldReturn200AndClubDetails_whenUpdateValidClub() throws Exception {
-        ClubRequestDto requestDto = ClubMockUtils.customRequestDto("oldName", "RO",
+        Long clubId = 5L;
+        ClubRequestDto updateRequestDto = ClubMockUtils.customRequest("updatedName", "RJ",
                 LocalDate.now(), true);
 
         StateResponseDto rjDto = StateMockUtils.rjDto();
-        ClubResponseDto responseDto = ClubMockUtils.customResponseDto("newName", rjDto,
-                LocalDate.of(2020, 6, 18), false);
-        responseDto.setId(5L);
+        ClubResponseDto updatedResponseDto = ClubMockUtils.customResponse("updatedName", rjDto,
+                LocalDate.now(), true);
+        updatedResponseDto.setId(clubId);
 
-        Mockito.when(clubService.update(5L, requestDto)).thenReturn(responseDto);
+        Mockito.when(clubService.update(clubId, updateRequestDto)).thenReturn(updatedResponseDto);
 
-        mockMvc.perform(put("/clubs/5")
+        mockMvc.perform(put("/clubs/{id}", clubId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestDto)))
+                .content(objectMapper.writeValueAsString(updateRequestDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(5))
-                .andExpect(jsonPath("$.name").value("newName"))
-                .andExpect(jsonPath("$.active").value(false));
+                .andExpect(jsonPath("$.name").value("updatedName"))
+                .andExpect(jsonPath("$.active").value(true));
     }
 
     @Test

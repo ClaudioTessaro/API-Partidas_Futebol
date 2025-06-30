@@ -29,7 +29,7 @@ public class MatchMockUtils {
     }
 
     public static MatchEntity custom(ClubEntity homeClub, ClubEntity awayClub, int homeGoals,
-                                     int awayGoals, StadiumEntity stadium){
+                                            int awayGoals, StadiumEntity stadium){
         return new MatchEntity(homeClub, awayClub, homeGoals, awayGoals, stadium, LocalDateTime.now());
     }
 
@@ -43,8 +43,8 @@ public class MatchMockUtils {
                 LocalDateTime.of(2010, 7, 10, 17, 45));
     }
 
-    public static MatchRequestDto custom(Long homeClubId, Long awayClubId, int homeGoals,
-                                         int awayGoals, Long stadiumId){
+    public static MatchRequestDto customRequest(Long homeClubId, Long awayClubId, int homeGoals,
+                                                int awayGoals, Long stadiumId){
         return new MatchRequestDto(homeClubId, awayClubId, homeGoals, awayGoals, stadiumId, LocalDateTime.now());
     }
 
@@ -64,8 +64,8 @@ public class MatchMockUtils {
                 LocalDateTime.of(2000, 12, 23, 14, 45));
     }
 
-    public static MatchResponseDto custom(Long id, ClubResponseDto homeClub, ClubResponseDto awayClub,
-                                          int homeGoals, int awayGoals, StadiumResponseDto stadiumId){
+    public static MatchResponseDto customResponse(Long id, ClubResponseDto homeClub, ClubResponseDto awayClub,
+                                                  int homeGoals, int awayGoals, StadiumResponseDto stadiumId){
         return new MatchResponseDto(id, homeClub, awayClub, homeGoals, awayGoals, stadiumId,
                 LocalDateTime.of(2002, 6, 18, 15, 30));
     }

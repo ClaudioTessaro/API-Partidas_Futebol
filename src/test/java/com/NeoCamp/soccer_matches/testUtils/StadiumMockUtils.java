@@ -25,7 +25,7 @@ public class StadiumMockUtils {
         return new StadiumRequestDto("Morumbi");
     }
 
-    public static StadiumRequestDto customRequestDto(String name) {
+    public static StadiumRequestDto customRequest(String name) {
         return new StadiumRequestDto(name);
     }
 
@@ -37,7 +37,7 @@ public class StadiumMockUtils {
         return new StadiumResponseDto(2L, "Morumbi");
     }
 
-    public static StadiumResponseDto customResponseDto(String name) {
+    public static StadiumResponseDto customResponse(String name) {
         return new StadiumResponseDto(2L, name);
     }
 }

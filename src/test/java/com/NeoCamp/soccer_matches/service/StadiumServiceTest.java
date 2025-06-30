@@ -137,9 +137,9 @@ public class StadiumServiceTest {
         StadiumEntity existingStadium = StadiumMockUtils.custom("Old Name");
         existingStadium.setId(existingStadiumId);
 
-        StadiumRequestDto updateRequest = StadiumMockUtils.customRequestDto("New Name");
+        StadiumRequestDto updateRequest = StadiumMockUtils.customRequest("New Name");
 
-        StadiumResponseDto updatedResponse = StadiumMockUtils.customResponseDto("New Name");
+        StadiumResponseDto updatedResponse = StadiumMockUtils.customResponse("New Name");
         updatedResponse.setId(existingStadiumId);
 
         Mockito.when(stadiumRepository.findById(existingStadiumId)).thenReturn(Optional.of(existingStadium));

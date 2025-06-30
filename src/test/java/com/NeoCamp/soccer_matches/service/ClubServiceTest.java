@@ -298,7 +298,7 @@ public class ClubServiceTest {
     @Test
     public void shouldThrowExceptionInSaveClub_whenInvalidStateCode() {
         String invalidStateCode = "XXX";
-        ClubRequestDto clubDto = ClubMockUtils.customRequestDto("club2",invalidStateCode,
+        ClubRequestDto clubDto = ClubMockUtils.customRequest("club2",invalidStateCode,
                 LocalDate.of(2020, 3, 15), true);
 
         BusinessException exception = Assertions.assertThrows(BusinessException.class,
@@ -316,10 +316,10 @@ public class ClubServiceTest {
                 LocalDate.of(2020, 3, 15), false);
         existingClub.setId(existingClubId);
 
-        ClubRequestDto updateRequest = ClubMockUtils.customRequestDto("newName", "RJ",
+        ClubRequestDto updateRequest = ClubMockUtils.customRequest("newName", "RJ",
                 LocalDate.of(2015, 10, 27), true);
 
-        ClubResponseDto updatedResponse = ClubMockUtils.customResponseDto("newName", StateMockUtils.rjDto(),
+        ClubResponseDto updatedResponse = ClubMockUtils.customResponse("newName", StateMockUtils.rjDto(),
                 LocalDate.of(2015, 10, 27),true);
         updatedResponse.setId(existingClubId);
 
@@ -353,7 +353,7 @@ public class ClubServiceTest {
         Long validId = 5L;
         String invalidStateCode = "YYY";
 
-        ClubRequestDto requestDto = ClubMockUtils.customRequestDto("Club6", invalidStateCode,
+        ClubRequestDto requestDto = ClubMockUtils.customRequest("Club6", invalidStateCode,
                 LocalDate.of(2020, 3, 15), true);
 
         ClubEntity existingClub = new ClubEntity();
