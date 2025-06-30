@@ -68,12 +68,11 @@ public class StadiumControllerIntegrationTest {
     public void shouldCreateStadium() throws Exception {
         StadiumRequestDto requestDto = new StadiumRequestDto("Morumbi");
 
-        String result = mockMvc.perform(post("/stadiums")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+        mockMvc.perform(post("/stadiums")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Morumbi"))
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(jsonPath("$.name").value("Morumbi"));
     }
 
     @Test
@@ -91,11 +90,11 @@ public class StadiumControllerIntegrationTest {
         StadiumEntity beiraRio = new StadiumEntity("Beira-Rio");
         stadiumRepository.save(beiraRio);
 
-        StadiumRequestDto updateDto = new StadiumRequestDto("Maracanã");
+        StadiumRequestDto updateRequest = new StadiumRequestDto("Maracanã");
 
         mockMvc.perform(put("/stadiums/{id}", beiraRio.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateDto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(beiraRio.getId()))
                 .andExpect(jsonPath("$.name").value("Maracanã"));
