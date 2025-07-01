@@ -67,4 +67,35 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
             CASE WHEN m.homeClub.id = :id THEN m.awayClub.name ELSE m.homeClub.name END
 """)
     List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(@Param("id") Long id);
+
+    @Query("""
+       SELECT new com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto(
+            :clubId,
+            (SELECT c.name FROM ClubEntity c WHERE c.id = :clubId),
+            CASE WHEN m.homeClub.id = :clubId THEN m.awayClub.id ELSE m.homeClub.id END,
+            CASE WHEN m.homeClub.id = :clubId THEN m.awayClub.name ELSE m.homeClub.name END,
+            COUNT(CASE WHEN (m.homeClub.id = :clubId AND m.homeGoals > m.awayGoals)
+                OR (m.awayClub.id = :clubId AND m.awayGoals > m.homeGoals) THEN 1 END),
+            COUNT(CASE WHEN m.homeGoals = m.awayGoals THEN 1 END),
+            COUNT(CASE WHEN (m.homeClub.id = :clubId AND m.homeGoals < m.awayGoals)
+                OR (m.awayClub.id = :clubId AND m.awayGoals < m.homeGoals) THEN 1 END),
+            SUM(CASE WHEN m.homeClub.id = :clubId THEN m.homeGoals ELSE m.awayGoals END),
+            SUM(CASE WHEN m.homeClub.id = :clubId THEN m.awayGoals ELSE m.homeGoals END)
+       )
+       FROM MatchEntity m
+       WHERE (m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
+          OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId)
+""")
+    ClubVersusClubStatsDto getHeadToHeadStats(
+            @Param("clubId") Long clubId,
+            @Param("opponentId") Long opponentId);
+
+    @Query("""
+       FROM MatchEntity m
+       WHERE (m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
+          OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId)
+""")
+    List<MatchEntity> getHeadToHeadMatches(
+            @Param("clubId") Long clubId,
+            @Param("opponentId")  Long opponentId);
 }
