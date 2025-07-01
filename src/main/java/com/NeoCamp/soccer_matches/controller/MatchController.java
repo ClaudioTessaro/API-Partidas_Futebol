@@ -22,8 +22,12 @@ public class MatchController {
     public ResponseEntity<Page<MatchResponseDto>> listMatchesByFilters(
             @RequestParam(required = false) Long clubId,
             @RequestParam(required = false) Long stadiumId,
+            @RequestParam(required = false) Boolean rout,
+            @RequestParam(required = false) Boolean filterAsHome,
+            @RequestParam(required = false) Boolean filterAsAway,
             Pageable pageable) {
-        Page<MatchResponseDto> matches = matchService.listMatchesByFilters(clubId, stadiumId, pageable);
+        Page<MatchResponseDto> matches = matchService.listMatchesByFilters(clubId, stadiumId, rout,
+                filterAsHome, filterAsAway, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(matches);
     }
 

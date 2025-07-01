@@ -5,6 +5,7 @@ import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StadiumEntity;
 import com.neocamp.soccer_matches.entity.MatchEntity;
+import com.neocamp.soccer_matches.exception.BusinessException;
 import com.neocamp.soccer_matches.mapper.MatchMapper;
 import com.neocamp.soccer_matches.repository.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,7 +22,8 @@ public class MatchService {
     private final StadiumService stadiumService;
     private final MatchMapper matchMapper;
 
-    public Page<MatchResponseDto> listMatchesByFilters(Long clubId, Long stadiumId, Pageable pageable) {
+    public Page<MatchResponseDto> listMatchesByFilters(Long clubId, Long stadiumId, Boolean rout,
+                                                       Boolean filterAsHome, Boolean filterAsAway, Pageable pageable) {
         ClubEntity club = null;
         StadiumEntity stadium = null;
 
@@ -31,8 +33,12 @@ public class MatchService {
         if (stadiumId != null) {
             stadium = stadiumService.findEntityById(stadiumId);
         }
+        if ((Boolean.TRUE.equals(filterAsHome) || Boolean.TRUE.equals(filterAsAway)) && clubId == null){
+            throw new BusinessException("To filter by home or away club, a club ID is required.");
+        }
 
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(club, stadium, pageable);
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(
+                club, stadium, rout, filterAsHome, filterAsAway, pageable);
         return matches.map(matchMapper::toDto);
     }
 

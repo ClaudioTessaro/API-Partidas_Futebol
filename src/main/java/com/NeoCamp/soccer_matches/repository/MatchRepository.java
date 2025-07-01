@@ -20,10 +20,16 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
         SELECT m FROM MatchEntity m
         WHERE (:club IS NULL OR m.homeClub = :club OR m.awayClub = :club)
         AND (:stadium IS NULL OR m.stadium = :stadium)
+        AND (:rout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
+        AND (:filterAsHome IS NULL OR (m.homeClub = :club AND :filterAsHome = TRUE))
+        AND (:filterAsAway IS NULL OR (m.awayClub = :club AND :filterAsAway = TRUE))
         """)
     Page<MatchEntity> listMatchesByFilters(
             @Param("club") ClubEntity club,
             @Param("stadium")StadiumEntity stadium,
+            @Param("rout") Boolean  rout,
+            @Param("filterAsHome") Boolean  homeClub,
+            @Param("filterAsAway") Boolean  awayClub,
             Pageable pageable
             );
 
@@ -91,7 +97,7 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
             @Param("opponentId") Long opponentId);
 
     @Query("""
-       FROM MatchEntity m
+       SELECT m FROM MatchEntity m
        WHERE (m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
           OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId)
 """)
