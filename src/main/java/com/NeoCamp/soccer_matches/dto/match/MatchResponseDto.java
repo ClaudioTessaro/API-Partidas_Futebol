@@ -19,5 +19,4 @@ public class MatchResponseDto {
     private Integer awayGoals;
     private StadiumResponseDto stadium;
     private LocalDateTime matchDatetime;
-
 }

@@ -4,6 +4,7 @@ import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
+import com.neocamp.soccer_matches.dto.match.HeadToHeadResponseDto;
 import com.neocamp.soccer_matches.service.ClubService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +51,12 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.OK).body(opponentsStats);
     }
 
-    //@GetMapping(/{clubId}/head-to-head/{opponentId})
-   // public
+    @GetMapping("/{clubId}/head-to-head/{opponentId}")
+    public ResponseEntity<HeadToHeadResponseDto> getHeadToHeadStats(@PathVariable Long clubId,
+                                                                    @PathVariable Long opponentId) {
+        HeadToHeadResponseDto headToHeadStats = clubService.getHeadToHeadStats(clubId, opponentId);
+        return ResponseEntity.status(HttpStatus.OK).body(headToHeadStats);
+    }
 
 
     @PostMapping

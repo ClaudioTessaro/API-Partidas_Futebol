@@ -1,6 +1,7 @@
 package com.neocamp.soccer_matches.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neocamp.soccer_matches.DesafioFutebolApplication;
 import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 
-@SpringBootTest
+@SpringBootTest(classes = DesafioFutebolApplication.class)
 @AutoConfigureMockMvc
 @Transactional
 public class ClubControllerIntegrationTest {

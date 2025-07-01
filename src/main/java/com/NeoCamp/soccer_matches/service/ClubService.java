@@ -4,11 +4,15 @@ import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
 import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
+import com.neocamp.soccer_matches.dto.match.HeadToHeadResponseDto;
+import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
+import com.neocamp.soccer_matches.entity.MatchEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
 import com.neocamp.soccer_matches.enums.StateCode;
 import com.neocamp.soccer_matches.exception.BusinessException;
 import com.neocamp.soccer_matches.mapper.ClubMapper;
+import com.neocamp.soccer_matches.mapper.MatchMapper;
 import com.neocamp.soccer_matches.repository.ClubRepository;
 import com.neocamp.soccer_matches.repository.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final StateService stateService;
     private final ClubMapper clubMapper;
+    private final MatchMapper matchMapper;
     private final MatchRepository matchRepository;
 
     public Page<ClubResponseDto> listClubsByFilters(String name, String stateCode, Boolean active, Pageable pageable) {
@@ -56,6 +62,17 @@ public class ClubService {
     public List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(Long id) {
         findEntityById(id);
         return matchRepository.getClubVersusOpponentsStats(id);
+    }
+
+    public HeadToHeadResponseDto getHeadToHeadStats(Long clubId, Long opponentId) {
+        findEntityById(clubId);
+        findEntityById(opponentId);
+
+        ClubVersusClubStatsDto stats = matchRepository.getHeadToHeadStats(clubId, opponentId);
+        List<MatchEntity> matchEntities = matchRepository.getHeadToHeadMatches(clubId, opponentId);
+        List<MatchResponseDto> matches = matchEntities.stream().map(matchMapper::toDto).collect(Collectors.toList());
+
+        return new HeadToHeadResponseDto(stats, matches);
     }
 
     public ClubResponseDto save(ClubRequestDto clubRequestDto) {

@@ -1,6 +1,7 @@
 package com.neocamp.soccer_matches.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neocamp.soccer_matches.DesafioFutebolApplication;
 import com.neocamp.soccer_matches.dto.stadium.StadiumRequestDto;
 import com.neocamp.soccer_matches.entity.StadiumEntity;
 import com.neocamp.soccer_matches.repository.StadiumRepository;
@@ -16,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = DesafioFutebolApplication.class)
 @AutoConfigureMockMvc
 @Transactional
 public class StadiumControllerIntegrationTest {
