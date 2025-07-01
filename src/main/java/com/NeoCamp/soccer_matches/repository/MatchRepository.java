@@ -91,17 +91,29 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
        FROM MatchEntity m
        WHERE (m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
           OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId)
+       AND (:rout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
+       AND (:filterAsHome IS NULL OR m.homeClub = :clubId AND :filterAsHome = TRUE)
+       AND (:filterAsAway IS NULL OR m.awayClub = :clubId AND :filterAsAway = TRUE)
 """)
     ClubVersusClubStatsDto getHeadToHeadStats(
             @Param("clubId") Long clubId,
-            @Param("opponentId") Long opponentId);
+            @Param("opponentId") Long opponentId,
+            @Param("rout") Boolean rout,
+            @Param("filterAsHome") Boolean filterAsHome,
+            @Param("filterAsAway") Boolean filterAsAway);
 
     @Query("""
        SELECT m FROM MatchEntity m
        WHERE (m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
           OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId)
+       AND (:rout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
+       AND (:filterAsHome IS NULL OR m.homeClub = :clubId AND :filterAsHome = TRUE)
+       AND (:filterAsAway IS NULL OR m.awayClub = :clubId AND :filterAsAway = TRUE)
 """)
     List<MatchEntity> getHeadToHeadMatches(
             @Param("clubId") Long clubId,
-            @Param("opponentId")  Long opponentId);
+            @Param("opponentId")  Long opponentId,
+            @Param("rout") Boolean rout,
+            @Param("filterAsHome") Boolean filterAsHome,
+            @Param("filterAsAway") Boolean filterAsAway);
 }

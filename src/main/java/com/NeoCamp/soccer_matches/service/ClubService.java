@@ -64,12 +64,19 @@ public class ClubService {
         return matchRepository.getClubVersusOpponentsStats(id);
     }
 
-    public HeadToHeadResponseDto getHeadToHeadStats(Long clubId, Long opponentId) {
+    public HeadToHeadResponseDto getHeadToHeadStats(Long clubId, Long opponentId, Boolean rout,
+                                                    Boolean filterAsHome, Boolean filterAsAway) {
         findEntityById(clubId);
         findEntityById(opponentId);
 
-        ClubVersusClubStatsDto stats = matchRepository.getHeadToHeadStats(clubId, opponentId);
-        List<MatchEntity> matchEntities = matchRepository.getHeadToHeadMatches(clubId, opponentId);
+        if ((Boolean.TRUE.equals(filterAsHome) || Boolean.TRUE.equals(filterAsAway)) && clubId == null) {
+            throw new BusinessException("To filter by home or away club, a club ID is required.");
+        }
+
+        ClubVersusClubStatsDto stats = matchRepository.getHeadToHeadStats(clubId, opponentId, rout,
+                filterAsHome, filterAsAway);
+        List<MatchEntity> matchEntities = matchRepository.getHeadToHeadMatches(clubId, opponentId, rout,
+                filterAsHome, filterAsAway);
         List<MatchResponseDto> matches = matchEntities.stream().map(matchMapper::toDto).collect(Collectors.toList());
 
         return new HeadToHeadResponseDto(stats, matches);

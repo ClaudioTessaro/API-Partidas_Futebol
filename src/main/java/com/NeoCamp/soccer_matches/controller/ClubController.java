@@ -52,9 +52,14 @@ public class ClubController {
     }
 
     @GetMapping("/{clubId}/head-to-head/{opponentId}")
-    public ResponseEntity<HeadToHeadResponseDto> getHeadToHeadStats(@PathVariable Long clubId,
-                                                                    @PathVariable Long opponentId) {
-        HeadToHeadResponseDto headToHeadStats = clubService.getHeadToHeadStats(clubId, opponentId);
+    public ResponseEntity<HeadToHeadResponseDto> getHeadToHeadStats(
+            @PathVariable Long clubId,
+            @PathVariable Long opponentId,
+            @RequestParam(required = false) Boolean rout,
+            @RequestParam(required = false) Boolean filterAsHome,
+            @RequestParam(required = false) Boolean filterAsAway) {
+        HeadToHeadResponseDto headToHeadStats = clubService.getHeadToHeadStats(clubId, opponentId, rout,
+                filterAsHome, filterAsAway);
         return ResponseEntity.status(HttpStatus.OK).body(headToHeadStats);
     }
 
