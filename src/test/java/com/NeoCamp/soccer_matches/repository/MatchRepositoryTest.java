@@ -76,7 +76,8 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByClub(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremio, null, pageable);
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremio, null, null,
+                null, null, pageable);
 
         Assertions.assertNotNull(matches);
         Assertions.assertEquals(2, matches.getTotalElements());
@@ -86,7 +87,8 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByStadium(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(null, maracana, pageable);
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(null, maracana, null,
+                null, null, pageable);
 
         Assertions.assertNotNull(matches);
         Assertions.assertEquals(1, matches.getTotalElements());
@@ -95,7 +97,8 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByClubAndStadium(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremio, maracana, pageable);
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremio, maracana, null,
+                null, null, pageable);
 
         Assertions.assertNotNull(matches);
         Assertions.assertEquals(1, matches.getTotalElements());

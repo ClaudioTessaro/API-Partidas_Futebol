@@ -86,11 +86,13 @@ public class MatchServiceTest {
         Page<MatchEntity> matches = new PageImpl<>(List.of(
                 flamengoVsCorinthiansAtMaracana, corinthiansVsGremioAtMorumbi));
 
-        Mockito.when(matchRepository.listMatchesByFilters(null, null, pageable))
+        Mockito.when(matchRepository.listMatchesByFilters(null, null, null, null,
+                        null, pageable))
                 .thenReturn(matches);
         Mockito.when(matchMapper.toDto(flamengoVsCorinthiansAtMaracana)).thenReturn(flamengoVsCorinthiansResponseDto);
 
-        Page<MatchResponseDto> result = matchService.listMatchesByFilters(null, null, pageable);
+        Page<MatchResponseDto> result = matchService.listMatchesByFilters(null, null, null,
+                null, null, pageable);
 
         Assertions.assertEquals(2,  result.getTotalElements());
         Assertions.assertEquals("Flamengo", result.getContent().getFirst().getHomeClub().getName());
@@ -104,10 +106,12 @@ public class MatchServiceTest {
         Page<MatchEntity> matches = new PageImpl<>(List.of(flamengoVsCorinthiansAtMaracana));
 
         Mockito.when(clubService.findEntityById(flamengoId)).thenReturn(flamengoEntity);
-        Mockito.when(matchRepository.listMatchesByFilters(flamengoEntity, null, pageable)).thenReturn(matches);
+        Mockito.when(matchRepository.listMatchesByFilters(flamengoEntity, null, null, null,
+                null, pageable)).thenReturn(matches);
         Mockito.when(matchMapper.toDto(flamengoVsCorinthiansAtMaracana)).thenReturn(flamengoVsCorinthiansResponseDto);
 
-        Page<MatchResponseDto> result = matchService.listMatchesByFilters(flamengoId, null, pageable);
+        Page<MatchResponseDto> result = matchService.listMatchesByFilters(flamengoId, null,null,
+                null, null, pageable);
 
         Assertions.assertEquals(1,  result.getTotalElements());
         Assertions.assertEquals("Flamengo", result.getContent().getFirst().getHomeClub().getName());
@@ -121,10 +125,12 @@ public class MatchServiceTest {
         Page<MatchEntity> matches = new PageImpl<>(List.of(corinthiansVsGremioAtMorumbi));
 
         Mockito.when(stadiumService.findEntityById(morumbiId)).thenReturn(morumbiEntity);
-        Mockito.when(matchRepository.listMatchesByFilters(null, morumbiEntity, pageable)).thenReturn(matches);
+        Mockito.when(matchRepository.listMatchesByFilters(null, morumbiEntity, null, null,
+                null, pageable)).thenReturn(matches);
         Mockito.when(matchMapper.toDto(corinthiansVsGremioAtMorumbi)).thenReturn(corinthiansVsGremioResponseDto);
 
-        Page<MatchResponseDto> result = matchService.listMatchesByFilters(null, morumbiId, pageable);
+        Page<MatchResponseDto> result = matchService.listMatchesByFilters(null, morumbiId, null,
+                null, null, pageable);
 
         Assertions.assertEquals(1,  result.getTotalElements());
         Assertions.assertEquals("Corinthians", result.getContent().getFirst().getHomeClub().getName());
@@ -140,11 +146,13 @@ public class MatchServiceTest {
 
         Mockito.when(clubService.findEntityById(corinthiansId)).thenReturn(corinthiansEntity);
         Mockito.when(stadiumService.findEntityById(maracanaId)).thenReturn(maracanaEntity);
-        Mockito.when(matchRepository.listMatchesByFilters(corinthiansEntity, maracanaEntity, pageable)).
+        Mockito.when(matchRepository.listMatchesByFilters(corinthiansEntity, maracanaEntity, null, null,
+                        null, pageable)).
                 thenReturn(matches);
         Mockito.when(matchMapper.toDto(flamengoVsCorinthiansAtMaracana)).thenReturn(flamengoVsCorinthiansResponseDto);
 
-        Page<MatchResponseDto> result = matchService.listMatchesByFilters(corinthiansId, maracanaId, pageable);
+        Page<MatchResponseDto> result = matchService.listMatchesByFilters(corinthiansId, maracanaId, null,
+                null, null, pageable);
 
         Assertions.assertEquals(1,  result.getTotalElements());
         Assertions.assertEquals("Flamengo", result.getContent().getFirst().getHomeClub().getName());
@@ -161,9 +169,11 @@ public class MatchServiceTest {
 
         Mockito.when(clubService.findEntityById(clubId)).thenReturn(null);
         Mockito.when(stadiumService.findEntityById(stadiumId)).thenReturn(null);
-        Mockito.when(matchRepository.listMatchesByFilters(null, null, pageable)).thenReturn(emptyPage);
+        Mockito.when(matchRepository.listMatchesByFilters(null, null, null, null,
+                null, pageable)).thenReturn(emptyPage);
 
-        Page<MatchResponseDto> result = matchService.listMatchesByFilters(clubId, stadiumId, pageable);
+        Page<MatchResponseDto> result = matchService.listMatchesByFilters(clubId, stadiumId, null,
+                null, null,pageable);
 
         Assertions.assertEquals(0, result.getTotalElements());
     }
