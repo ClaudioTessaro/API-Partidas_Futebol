@@ -7,6 +7,7 @@ import com.neocamp.soccer_matches.entity.MatchEntity;
 import com.neocamp.soccer_matches.entity.StadiumEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
 import com.neocamp.soccer_matches.enums.StateCode;
+import com.neocamp.soccer_matches.testUtils.StateTestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,9 +34,6 @@ public class MatchRepositoryTest {
     @Autowired
     private StateRepository stateRepository;
 
-    private StateEntity rs;
-    private StateEntity rj;
-    private StateEntity sp;
     private ClubEntity gremio;
     private Long gremioId;
     private StadiumEntity maracana;
@@ -47,9 +45,9 @@ public class MatchRepositoryTest {
     public void setup() {
         pageable = PageRequest.of(0, 10);
 
-        rs = stateRepository.findByCode(StateCode.RS).orElseThrow(() -> new RuntimeException("State not found"));
-        rj = stateRepository.findByCode(StateCode.RJ).orElseThrow(() -> new RuntimeException("State not found"));
-        sp = stateRepository.findByCode(StateCode.SP).orElseThrow(() -> new RuntimeException("State not found"));
+        StateEntity rs = StateTestUtils.getStateOrFail(stateRepository, StateCode.RS);
+        StateEntity rj = StateTestUtils.getStateOrFail(stateRepository, StateCode.RJ);
+        StateEntity sp = StateTestUtils.getStateOrFail(stateRepository, StateCode.SP);
 
         gremio = new ClubEntity("Grêmio", rs,
                 LocalDate.of(1945, 7, 23), true);
