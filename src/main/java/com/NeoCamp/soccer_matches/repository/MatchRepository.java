@@ -2,9 +2,7 @@ package com.neocamp.soccer_matches.repository;
 
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
-import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.MatchEntity;
-import com.neocamp.soccer_matches.entity.StadiumEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,12 +16,18 @@ import java.util.List;
 public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
     @Query("""
         SELECT m FROM MatchEntity m
-        WHERE (:club IS NULL OR m.homeClub = :club OR m.awayClub = :club)
-        AND (:stadium IS NULL OR m.stadium = :stadium)
+        WHERE (:clubId IS NULL OR m.homeClub.id = :clubId OR m.awayClub.id = :clubId)
+        AND (:stadiumId IS NULL OR m.stadium.id = :stadiumId)
+        AND (:isRout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
+        AND (:isHome IS NULL OR (m.homeClub.id = :clubId AND :isHome = TRUE))
+        AND (:isAway IS NULL OR (m.awayClub.id = :clubId AND :isAway = TRUE))
         """)
     Page<MatchEntity> listMatchesByFilters(
-            @Param("club") ClubEntity club,
-            @Param("stadium")StadiumEntity stadium,
+            @Param("clubId") Long clubId,
+            @Param("stadiumId")Long stadiumId,
+            @Param("rout") Boolean  isRout,
+            @Param("isHome") Boolean isHome,
+            @Param("isAway") Boolean isAway,
             Pageable pageable
             );
 
@@ -42,9 +46,14 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
                      WHEN m.awayClub.id = :id THEN m.homeGoals ELSE 0 END)
         )
         FROM MatchEntity m
-        WHERE m.homeClub.id = :id OR m.awayClub.id = :id
+        WHERE (m.homeClub.id = :id OR m.awayClub.id = :id)
+        AND (:isHome IS NULL OR (m.homeClub.id = :id AND :isHome = TRUE))
+        AND (:isAway IS NULL OR (m.awayClub.id = :id AND :isAway = TRUE))
     """)
-    ClubStatsResponseDto getClubStats(@Param("id") Long id);
+    ClubStatsResponseDto getClubStats(
+            @Param("id") Long id,
+            @Param("isHome") Boolean isHome,
+            @Param("isAway") Boolean isAway);
 
     @Query("""
         SELECT new com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto(
@@ -62,11 +71,16 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
        )
        FROM MatchEntity m
        WHERE (m.homeClub.id = :id OR m.awayClub.id = :id)
+       AND (:isHome IS NULL OR (m.homeClub.id = :id AND :isHome = TRUE))
+       AND (:isAway IS NULL OR (m.awayClub.id = :id AND :isAway = TRUE))
        GROUP BY
             CASE WHEN m.homeClub.id = :id THEN m.awayClub.id ELSE m.homeClub.id END,
             CASE WHEN m.homeClub.id = :id THEN m.awayClub.name ELSE m.homeClub.name END
 """)
-    List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(@Param("id") Long id);
+    List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(
+            @Param("id") Long id,
+            @Param("isHome") Boolean isHome,
+            @Param("isAway") Boolean isAway);
 
     @Query("""
        SELECT new com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto(
@@ -83,19 +97,31 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
             SUM(CASE WHEN m.homeClub.id = :clubId THEN m.awayGoals ELSE m.homeGoals END)
        )
        FROM MatchEntity m
-       WHERE (m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
-          OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId)
+       WHERE ((m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
+          OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId))
+       AND (:rout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
+       AND (:filterAsHome IS NULL OR (m.homeClub.id = :clubId AND :filterAsHome = TRUE))
+       AND (:filterAsAway IS NULL OR (m.awayClub.id = :clubId AND :filterAsAway = TRUE))
 """)
     ClubVersusClubStatsDto getHeadToHeadStats(
             @Param("clubId") Long clubId,
-            @Param("opponentId") Long opponentId);
+            @Param("opponentId") Long opponentId,
+            @Param("rout") Boolean rout,
+            @Param("filterAsHome") Boolean filterAsHome,
+            @Param("filterAsAway") Boolean filterAsAway);
 
     @Query("""
-       FROM MatchEntity m
-       WHERE (m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
-          OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId)
+       SELECT m FROM MatchEntity m
+       WHERE ((m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
+          OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId))
+       AND (:rout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
+       AND (:isHome IS NULL OR (m.homeClub.id = :clubId AND :isHome = TRUE))
+       AND (:isAway IS NULL OR (m.awayClub.id = :clubId AND :isAway = TRUE))
 """)
     List<MatchEntity> getHeadToHeadMatches(
             @Param("clubId") Long clubId,
-            @Param("opponentId")  Long opponentId);
+            @Param("opponentId")  Long opponentId,
+            @Param("isRout") Boolean isRout,
+            @Param("isHome") Boolean isHome,
+            @Param("isAway") Boolean isAway);
 }

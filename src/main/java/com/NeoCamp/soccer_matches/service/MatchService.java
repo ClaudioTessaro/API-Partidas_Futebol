@@ -5,6 +5,7 @@ import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StadiumEntity;
 import com.neocamp.soccer_matches.entity.MatchEntity;
+import com.neocamp.soccer_matches.enums.MatchFilter;
 import com.neocamp.soccer_matches.mapper.MatchMapper;
 import com.neocamp.soccer_matches.repository.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,18 +22,28 @@ public class MatchService {
     private final StadiumService stadiumService;
     private final MatchMapper matchMapper;
 
-    public Page<MatchResponseDto> listMatchesByFilters(Long clubId, Long stadiumId, Pageable pageable) {
-        ClubEntity club = null;
-        StadiumEntity stadium = null;
+    public Page<MatchResponseDto> listMatchesByFilters(Long clubId, Long stadiumId, MatchFilter filter,
+                                                       Pageable pageable) {
+        Boolean isRout = null;
+        Boolean isHome = null;
+        Boolean isAway = null;
 
         if (clubId != null) {
-            club = clubService.findEntityById(clubId);
+            clubService.findEntityById(clubId);
         }
         if (stadiumId != null) {
-            stadium = stadiumService.findEntityById(stadiumId);
+            stadiumService.findEntityById(stadiumId);
         }
+       if (filter != null) {
+           switch (filter) {
+               case ROUT ->  isRout = true;
+               case HOME -> isHome = true;
+               case AWAY ->  isAway = true;
+           }
+       }
 
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(club, stadium, pageable);
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(
+                clubId, stadiumId, isRout, isHome, isAway, pageable);
         return matches.map(matchMapper::toDto);
     }
 

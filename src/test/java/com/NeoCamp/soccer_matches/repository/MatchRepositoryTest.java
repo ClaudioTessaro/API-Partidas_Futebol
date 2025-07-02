@@ -35,8 +35,8 @@ public class MatchRepositoryTest {
     private StateRepository stateRepository;
 
     private ClubEntity gremio;
-    private Long gremioId;
     private StadiumEntity maracana;
+    private Long gremioId, maracanaId;
     private Pageable pageable;
     @Autowired
     private StadiumRepository stadiumRepository;
@@ -63,6 +63,8 @@ public class MatchRepositoryTest {
         gremioId = gremio.getId();
 
         maracana = stadiumRepository.save(new StadiumEntity("Maracanã"));
+        maracanaId = maracana.getId();
+
         StadiumEntity morumbi = stadiumRepository.save(new StadiumEntity("Morumbi"));
 
         MatchEntity gremioVsFlamengoAtMaracana = new MatchEntity(gremio, flamengo, 2, 1,
@@ -76,7 +78,8 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByClub(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremio, null, pageable);
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremioId, null, null,
+                null, null, pageable);
 
         Assertions.assertNotNull(matches);
         Assertions.assertEquals(2, matches.getTotalElements());
@@ -86,7 +89,8 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByStadium(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(null, maracana, pageable);
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(null, maracanaId, null,
+                null, null, pageable);
 
         Assertions.assertNotNull(matches);
         Assertions.assertEquals(1, matches.getTotalElements());
@@ -95,7 +99,8 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByClubAndStadium(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremio, maracana, pageable);
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremioId, maracanaId, null,
+                null, null, pageable);
 
         Assertions.assertNotNull(matches);
         Assertions.assertEquals(1, matches.getTotalElements());
@@ -105,7 +110,7 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldCalculateClubStats() {
-        ClubStatsResponseDto clubStats = matchRepository.getClubStats(gremioId);
+        ClubStatsResponseDto clubStats = matchRepository.getClubStats(gremioId, null, null);
 
         Assertions.assertEquals("Grêmio", clubStats.getClubName());
         Assertions.assertEquals(1, clubStats.getTotalWins());
@@ -116,7 +121,7 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldCalculateClubVersusOpponentsStats() {
-        List<ClubVersusClubStatsDto> statsList = matchRepository.getClubVersusOpponentsStats(gremioId);
+        List<ClubVersusClubStatsDto> statsList = matchRepository.getClubVersusOpponentsStats(gremioId, null, null);
 
         Assertions.assertEquals(2, statsList.size());
         assertThat(statsList).extracting(ClubVersusClubStatsDto::getOpponentName).contains("Corinthians", "Flamengo");

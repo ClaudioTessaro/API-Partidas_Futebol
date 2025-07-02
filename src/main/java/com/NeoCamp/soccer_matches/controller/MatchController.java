@@ -2,6 +2,7 @@ package com.neocamp.soccer_matches.controller;
 
 import com.neocamp.soccer_matches.dto.match.MatchRequestDto;
 import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
+import com.neocamp.soccer_matches.enums.MatchFilter;
 import com.neocamp.soccer_matches.service.MatchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,9 @@ public class MatchController {
     public ResponseEntity<Page<MatchResponseDto>> listMatchesByFilters(
             @RequestParam(required = false) Long clubId,
             @RequestParam(required = false) Long stadiumId,
+            @RequestParam(required = false)MatchFilter filter,
             Pageable pageable) {
-        Page<MatchResponseDto> matches = matchService.listMatchesByFilters(clubId, stadiumId, pageable);
+        Page<MatchResponseDto> matches = matchService.listMatchesByFilters(clubId, stadiumId, filter, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(matches);
     }
 
