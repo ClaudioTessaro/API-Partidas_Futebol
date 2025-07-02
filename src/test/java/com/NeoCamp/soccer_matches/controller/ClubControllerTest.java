@@ -197,7 +197,7 @@ public class ClubControllerTest {
 
         List<ClubVersusClubStatsDto> statsList = List.of(mockOpponentsStats1);
 
-        Mockito.when(clubService.getClubVersusOpponentsStats(id)).thenReturn(statsList);
+        Mockito.when(clubService.getClubVersusOpponentsStats(id, null, null)).thenReturn(statsList);
 
         mockMvc.perform(get("/clubs/{id}/opponents/stats", id))
                 .andExpect(status().isOk())

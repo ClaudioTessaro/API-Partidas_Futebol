@@ -35,8 +35,8 @@ public class MatchRepositoryTest {
     private StateRepository stateRepository;
 
     private ClubEntity gremio;
-    private Long gremioId;
     private StadiumEntity maracana;
+    private Long gremioId, maracanaId;
     private Pageable pageable;
     @Autowired
     private StadiumRepository stadiumRepository;
@@ -63,6 +63,8 @@ public class MatchRepositoryTest {
         gremioId = gremio.getId();
 
         maracana = stadiumRepository.save(new StadiumEntity("Maracanã"));
+        maracanaId = maracana.getId();
+
         StadiumEntity morumbi = stadiumRepository.save(new StadiumEntity("Morumbi"));
 
         MatchEntity gremioVsFlamengoAtMaracana = new MatchEntity(gremio, flamengo, 2, 1,
@@ -76,7 +78,7 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByClub(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremio, null, null,
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremioId, null, null,
                 null, null, pageable);
 
         Assertions.assertNotNull(matches);
@@ -87,7 +89,7 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByStadium(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(null, maracana, null,
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(null, maracanaId, null,
                 null, null, pageable);
 
         Assertions.assertNotNull(matches);
@@ -97,7 +99,7 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldFilterMatchesByClubAndStadium(){
-        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremio, maracana, null,
+        Page<MatchEntity> matches = matchRepository.listMatchesByFilters(gremioId, maracanaId, null,
                 null, null, pageable);
 
         Assertions.assertNotNull(matches);
@@ -119,7 +121,7 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldCalculateClubVersusOpponentsStats() {
-        List<ClubVersusClubStatsDto> statsList = matchRepository.getClubVersusOpponentsStats(gremioId);
+        List<ClubVersusClubStatsDto> statsList = matchRepository.getClubVersusOpponentsStats(gremioId, null, null);
 
         Assertions.assertEquals(2, statsList.size());
         assertThat(statsList).extracting(ClubVersusClubStatsDto::getOpponentName).contains("Corinthians", "Flamengo");

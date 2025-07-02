@@ -24,21 +24,18 @@ public class MatchService {
 
     public Page<MatchResponseDto> listMatchesByFilters(Long clubId, Long stadiumId, Boolean rout,
                                                        Boolean filterAsHome, Boolean filterAsAway, Pageable pageable) {
-        ClubEntity club = null;
-        StadiumEntity stadium = null;
-
         if (clubId != null) {
-            club = clubService.findEntityById(clubId);
+            clubService.findEntityById(clubId);
         }
         if (stadiumId != null) {
-            stadium = stadiumService.findEntityById(stadiumId);
+            stadiumService.findEntityById(stadiumId);
         }
         if ((Boolean.TRUE.equals(filterAsHome) || Boolean.TRUE.equals(filterAsAway)) && clubId == null){
             throw new BusinessException("To filter by home or away club, a club ID is required.");
         }
 
         Page<MatchEntity> matches = matchRepository.listMatchesByFilters(
-                club, stadium, rout, filterAsHome, filterAsAway, pageable);
+                clubId, stadiumId, rout, filterAsHome, filterAsAway, pageable);
         return matches.map(matchMapper::toDto);
     }
 
