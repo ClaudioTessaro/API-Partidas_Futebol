@@ -9,6 +9,7 @@ import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.MatchEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.enums.MatchFilter;
 import com.neocamp.soccer_matches.enums.StateCode;
 import com.neocamp.soccer_matches.exception.BusinessException;
 import com.neocamp.soccer_matches.mapper.ClubMapper;
@@ -54,30 +55,58 @@ public class ClubService {
                 .orElseThrow(() -> new EntityNotFoundException("Club not found: " + id));
     }
 
-    public ClubStatsResponseDto getClubStats(Long id, Boolean filterAsHome, Boolean filterAsAway) {
+    public ClubStatsResponseDto getClubStats(Long id, MatchFilter filter) {
         findEntityById(id);
-        return matchRepository.getClubStats(id, filterAsHome, filterAsAway);
+
+        Boolean isHome = null;
+        Boolean isAway = null;
+
+        if (filter != null) {
+            switch (filter) {
+                case HOME ->  isHome = true;
+                case AWAY -> isAway = true;
+                case ROUT -> throw new BusinessException("Filter rout is not supported for this endpoint");
+            }
+        }
+        return matchRepository.getClubStats(id, isHome, isAway);
     }
 
-    public List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(Long id, Boolean filterAsHome,
-                                                                    Boolean filterAsAway) {
+    public List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(Long id, MatchFilter filter) {
         findEntityById(id);
-        return matchRepository.getClubVersusOpponentsStats(id, filterAsHome, filterAsAway);
+
+        Boolean isHome = null;
+        Boolean isAway = null;
+
+        if (filter != null) {
+            switch (filter) {
+                case HOME ->  isHome = true;
+                case AWAY ->  isAway = true;
+                case ROUT ->  throw new BusinessException("Filter rout is not supported for this endpoint");
+            }
+        }
+        return matchRepository.getClubVersusOpponentsStats(id, isHome, isAway);
     }
 
-    public HeadToHeadResponseDto getHeadToHeadStats(Long clubId, Long opponentId, Boolean rout,
-                                                    Boolean filterAsHome, Boolean filterAsAway) {
+    public HeadToHeadResponseDto getHeadToHeadStats(Long clubId, Long opponentId, MatchFilter filter) {
         findEntityById(clubId);
         findEntityById(opponentId);
 
-        if ((Boolean.TRUE.equals(filterAsHome) || Boolean.TRUE.equals(filterAsAway)) && clubId == null) {
-            throw new BusinessException("To filter by home or away club, a club ID is required.");
+        Boolean isRout = null;
+        Boolean isHome = null;
+        Boolean isAway = null;
+
+        if (filter != null) {
+            switch (filter) {
+                case ROUT ->  isRout = true;
+                case HOME ->  isHome = true;
+                case AWAY ->  isAway = true;
+            }
         }
 
-        ClubVersusClubStatsDto stats = matchRepository.getHeadToHeadStats(clubId, opponentId, rout,
-                filterAsHome, filterAsAway);
-        List<MatchEntity> matchEntities = matchRepository.getHeadToHeadMatches(clubId, opponentId, rout,
-                filterAsHome, filterAsAway);
+        ClubVersusClubStatsDto stats = matchRepository.getHeadToHeadStats(clubId, opponentId, isRout,
+                isHome, isAway);
+        List<MatchEntity> matchEntities = matchRepository.getHeadToHeadMatches(clubId, opponentId, isRout,
+                isHome, isAway);
         List<MatchResponseDto> matches = matchEntities.stream().map(matchMapper::toDto).collect(Collectors.toList());
 
         return new HeadToHeadResponseDto(stats, matches);

@@ -18,16 +18,16 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
         SELECT m FROM MatchEntity m
         WHERE (:clubId IS NULL OR m.homeClub.id = :clubId OR m.awayClub.id = :clubId)
         AND (:stadiumId IS NULL OR m.stadium.id = :stadiumId)
-        AND (:rout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
-        AND (:filterAsHome IS NULL OR (m.homeClub.id = :clubId AND :filterAsHome = TRUE))
-        AND (:filterAsAway IS NULL OR (m.awayClub.id = :clubId AND :filterAsAway = TRUE))
+        AND (:isRout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
+        AND (:isHome IS NULL OR (m.homeClub.id = :clubId AND :isHome = TRUE))
+        AND (:isAway IS NULL OR (m.awayClub.id = :clubId AND :isAway = TRUE))
         """)
     Page<MatchEntity> listMatchesByFilters(
             @Param("clubId") Long clubId,
             @Param("stadiumId")Long stadiumId,
-            @Param("rout") Boolean  rout,
-            @Param("filterAsHome") Boolean  filterAsHome,
-            @Param("filterAsAway") Boolean  filterAsAway,
+            @Param("rout") Boolean  isRout,
+            @Param("isHome") Boolean isHome,
+            @Param("isAway") Boolean isAway,
             Pageable pageable
             );
 
@@ -47,13 +47,13 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
         )
         FROM MatchEntity m
         WHERE (m.homeClub.id = :id OR m.awayClub.id = :id)
-        AND (:filterAsHome IS NULL OR (m.homeClub.id = :id AND :filterAsHome = TRUE))
-        AND (:filterAsAway IS NULL OR (m.awayClub.id = :id AND :filterAsAway = TRUE))
+        AND (:isHome IS NULL OR (m.homeClub.id = :id AND :isHome = TRUE))
+        AND (:isAway IS NULL OR (m.awayClub.id = :id AND :isAway = TRUE))
     """)
     ClubStatsResponseDto getClubStats(
             @Param("id") Long id,
-            @Param("filterAsHome") Boolean filterAsHome,
-            @Param("filterAsAway") Boolean filterAsAway);
+            @Param("isHome") Boolean isHome,
+            @Param("isAway") Boolean isAway);
 
     @Query("""
         SELECT new com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto(
@@ -71,16 +71,16 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
        )
        FROM MatchEntity m
        WHERE (m.homeClub.id = :id OR m.awayClub.id = :id)
-       AND (:filterAsHome IS NULL OR (m.homeClub.id = :id AND :filterAsHome = TRUE))
-       AND (:filterAsAway IS NULL OR (m.awayClub.id = :id AND :filterAsAway = TRUE))
+       AND (:isHome IS NULL OR (m.homeClub.id = :id AND :isHome = TRUE))
+       AND (:isAway IS NULL OR (m.awayClub.id = :id AND :isAway = TRUE))
        GROUP BY
             CASE WHEN m.homeClub.id = :id THEN m.awayClub.id ELSE m.homeClub.id END,
             CASE WHEN m.homeClub.id = :id THEN m.awayClub.name ELSE m.homeClub.name END
 """)
     List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(
             @Param("id") Long id,
-            @Param("filterAsHome") Boolean filterAsHome,
-            @Param("filterAsAway") Boolean filterAsAway);
+            @Param("isHome") Boolean isHome,
+            @Param("isAway") Boolean isAway);
 
     @Query("""
        SELECT new com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto(
@@ -115,13 +115,13 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
        WHERE ((m.homeClub.id = :clubId AND m.awayClub.id = :opponentId)
           OR (m.awayClub.id = :clubId AND m.homeClub.id = :opponentId))
        AND (:rout IS NULL OR (ABS(m.homeGoals - m.awayGoals) >= 3))
-       AND (:filterAsHome IS NULL OR (m.homeClub.id = :clubId AND :filterAsHome = TRUE))
-       AND (:filterAsAway IS NULL OR (m.awayClub.id = :clubId AND :filterAsAway = TRUE))
+       AND (:isHome IS NULL OR (m.homeClub.id = :clubId AND :isHome = TRUE))
+       AND (:isAway IS NULL OR (m.awayClub.id = :clubId AND :isAway = TRUE))
 """)
     List<MatchEntity> getHeadToHeadMatches(
             @Param("clubId") Long clubId,
             @Param("opponentId")  Long opponentId,
-            @Param("rout") Boolean rout,
-            @Param("filterAsHome") Boolean filterAsHome,
-            @Param("filterAsAway") Boolean filterAsAway);
+            @Param("isRout") Boolean isRout,
+            @Param("isHome") Boolean isHome,
+            @Param("isAway") Boolean isAway);
 }
