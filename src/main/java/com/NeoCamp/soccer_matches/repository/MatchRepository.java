@@ -48,9 +48,14 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
                      WHEN m.awayClub.id = :id THEN m.homeGoals ELSE 0 END)
         )
         FROM MatchEntity m
-        WHERE m.homeClub.id = :id OR m.awayClub.id = :id
+        WHERE (m.homeClub.id = :id OR m.awayClub.id = :id)
+        AND (:filterAsHome IS NULL OR (m.homeClub.id = :id AND :filterAsHome = TRUE))
+        AND (:filterAsAway IS NULL OR (m.awayClub.id = :id AND :filterAsAway = TRUE))
     """)
-    ClubStatsResponseDto getClubStats(@Param("id") Long id);
+    ClubStatsResponseDto getClubStats(
+            @Param("id") Long id,
+            @Param("filterAsHome") Boolean filterAsHome,
+            @Param("filterAsAway") Boolean filterAsAway);
 
     @Query("""
         SELECT new com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto(

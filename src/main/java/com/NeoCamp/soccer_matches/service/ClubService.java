@@ -54,9 +54,9 @@ public class ClubService {
                 .orElseThrow(() -> new EntityNotFoundException("Club not found: " + id));
     }
 
-    public ClubStatsResponseDto getClubStats(Long id) {
+    public ClubStatsResponseDto getClubStats(Long id, Boolean filterAsHome, Boolean filterAsAway) {
         findEntityById(id);
-        return matchRepository.getClubStats(id);
+        return matchRepository.getClubStats(id, filterAsHome, filterAsAway);
     }
 
     public List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(Long id) {

@@ -40,8 +40,11 @@ public class ClubController {
     }
 
     @GetMapping("/{id}/stats")
-    public ResponseEntity<ClubStatsResponseDto> getClubStats(@PathVariable Long id) {
-        ClubStatsResponseDto clubStats = clubService.getClubStats(id);
+    public ResponseEntity<ClubStatsResponseDto> getClubStats(
+            @PathVariable Long id,
+            @RequestParam(required = false) Boolean filterAsHome,
+            @RequestParam(required = false) Boolean filterAsAway) {
+        ClubStatsResponseDto clubStats = clubService.getClubStats(id, filterAsHome, filterAsAway);
         return ResponseEntity.status(HttpStatus.OK).body(clubStats);
     }
 
