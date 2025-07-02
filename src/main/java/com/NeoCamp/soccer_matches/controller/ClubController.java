@@ -49,8 +49,12 @@ public class ClubController {
     }
 
     @GetMapping("/{id}/opponents/stats")
-    public ResponseEntity<List<ClubVersusClubStatsDto>> getClubVersusOpponentsStats(@PathVariable Long id) {
-        List<ClubVersusClubStatsDto> opponentsStats = clubService.getClubVersusOpponentsStats(id);
+    public ResponseEntity<List<ClubVersusClubStatsDto>> getClubVersusOpponentsStats(
+            @PathVariable Long id,
+            @RequestParam(required = false) Boolean filterAsHome,
+            @RequestParam(required = false) Boolean filterAsAway) {
+        List<ClubVersusClubStatsDto> opponentsStats = clubService.getClubVersusOpponentsStats(id,
+                filterAsHome, filterAsAway);
         return ResponseEntity.status(HttpStatus.OK).body(opponentsStats);
     }
 
@@ -65,7 +69,6 @@ public class ClubController {
                 filterAsHome, filterAsAway);
         return ResponseEntity.status(HttpStatus.OK).body(headToHeadStats);
     }
-
 
     @PostMapping
     public ResponseEntity<ClubResponseDto> create(@RequestBody @Valid ClubRequestDto dto) {

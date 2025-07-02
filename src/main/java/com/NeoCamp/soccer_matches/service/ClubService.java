@@ -36,7 +36,7 @@ public class ClubService {
     public Page<ClubResponseDto> listClubsByFilters(String name, String stateCode, Boolean active, Pageable pageable) {
         StateEntity homeState = null;
         if (stateCode != null) {
-            homeState = stateService.findByCode(StateCode.valueOf(stateCode));
+            homeState = stateService.findByCode(StateCode.valueOf(stateCode.toUpperCase()));
         }
 
         Page<ClubEntity> clubs = clubRepository.listClubsByFilters(name, homeState, active, pageable);
@@ -59,9 +59,10 @@ public class ClubService {
         return matchRepository.getClubStats(id, filterAsHome, filterAsAway);
     }
 
-    public List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(Long id) {
+    public List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(Long id, Boolean filterAsHome,
+                                                                    Boolean filterAsAway) {
         findEntityById(id);
-        return matchRepository.getClubVersusOpponentsStats(id);
+        return matchRepository.getClubVersusOpponentsStats(id, filterAsHome, filterAsAway);
     }
 
     public HeadToHeadResponseDto getHeadToHeadStats(Long clubId, Long opponentId, Boolean rout,
