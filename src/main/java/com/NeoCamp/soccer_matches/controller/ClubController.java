@@ -5,6 +5,7 @@ import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.dto.match.HeadToHeadResponseDto;
+import com.neocamp.soccer_matches.enums.MatchFilter;
 import com.neocamp.soccer_matches.service.ClubService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,19 +43,17 @@ public class ClubController {
     @GetMapping("/{id}/stats")
     public ResponseEntity<ClubStatsResponseDto> getClubStats(
             @PathVariable Long id,
-            @RequestParam(required = false) Boolean filterAsHome,
-            @RequestParam(required = false) Boolean filterAsAway) {
-        ClubStatsResponseDto clubStats = clubService.getClubStats(id, filterAsHome, filterAsAway);
+            @RequestParam(required = false) MatchFilter filter) {
+        ClubStatsResponseDto clubStats = clubService.getClubStats(id, filter);
         return ResponseEntity.status(HttpStatus.OK).body(clubStats);
     }
 
     @GetMapping("/{id}/opponents/stats")
     public ResponseEntity<List<ClubVersusClubStatsDto>> getClubVersusOpponentsStats(
             @PathVariable Long id,
-            @RequestParam(required = false) Boolean filterAsHome,
-            @RequestParam(required = false) Boolean filterAsAway) {
+            @RequestParam(required = false) MatchFilter filter) {
         List<ClubVersusClubStatsDto> opponentsStats = clubService.getClubVersusOpponentsStats(id,
-                filterAsHome, filterAsAway);
+                filter);
         return ResponseEntity.status(HttpStatus.OK).body(opponentsStats);
     }
 
@@ -62,11 +61,8 @@ public class ClubController {
     public ResponseEntity<HeadToHeadResponseDto> getHeadToHeadStats(
             @PathVariable Long clubId,
             @PathVariable Long opponentId,
-            @RequestParam(required = false) Boolean rout,
-            @RequestParam(required = false) Boolean filterAsHome,
-            @RequestParam(required = false) Boolean filterAsAway) {
-        HeadToHeadResponseDto headToHeadStats = clubService.getHeadToHeadStats(clubId, opponentId, rout,
-                filterAsHome, filterAsAway);
+            @RequestParam(required = false) MatchFilter filter) {
+        HeadToHeadResponseDto headToHeadStats = clubService.getHeadToHeadStats(clubId, opponentId, filter);
         return ResponseEntity.status(HttpStatus.OK).body(headToHeadStats);
     }
 

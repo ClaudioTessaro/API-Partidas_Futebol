@@ -51,8 +51,8 @@ public class MatchControllerTest {
         Page<MatchResponseDto> matches = new PageImpl<>(List.of
                 (flamengoVsCorinthians, corinthiansVsGremio), pageable, 2);
 
-        Mockito.when(matchService.listMatchesByFilters(null, null, null, null,
-                null, pageable)).thenReturn(matches);
+        Mockito.when(matchService.listMatchesByFilters(null, null, null, pageable))
+                .thenReturn(matches);
 
         mockMvc.perform(get("/matches")
                 .param("page", "0")
@@ -72,8 +72,7 @@ public class MatchControllerTest {
 
         Page<MatchResponseDto> matches = new PageImpl<>(List.of(corinthiansVsGremio), pageable, 1);
 
-        Mockito.when(matchService.listMatchesByFilters(clubId, null, null, null,
-                null, pageable)).thenReturn(matches);
+        Mockito.when(matchService.listMatchesByFilters(clubId, null,null, pageable)).thenReturn(matches);
 
         mockMvc.perform(get("/matches")
                 .param("clubId", String.valueOf(clubId))
@@ -95,8 +94,7 @@ public class MatchControllerTest {
 
         Page<MatchResponseDto> matches = new PageImpl<>(List.of(flamengoVsCorinthians), pageable, 1);
 
-        Mockito.when(matchService.listMatchesByFilters(null, stadiumId, null, null,
-                null, pageable)).thenReturn(matches);
+        Mockito.when(matchService.listMatchesByFilters(null, stadiumId, null, pageable)).thenReturn(matches);
 
         mockMvc.perform(get("/matches")
                 .param("stadiumId", String.valueOf(stadiumId))
@@ -117,8 +115,7 @@ public class MatchControllerTest {
 
         Page<MatchResponseDto> matches = new PageImpl<>(List.of(corinthiansVsGremioAtMorumbi), pageable, 1);
 
-        Mockito.when(matchService.listMatchesByFilters(clubId, stadiumId, null, null,
-                null, pageable)).thenReturn(matches);
+        Mockito.when(matchService.listMatchesByFilters(clubId, stadiumId, null, pageable)).thenReturn(matches);
 
         mockMvc.perform(get("/matches")
                 .param("clubId", String.valueOf(clubId))
