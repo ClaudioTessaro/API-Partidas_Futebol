@@ -180,7 +180,7 @@ public class ClubControllerTest {
         ClubStatsResponseDto mockStats = new ClubStatsResponseDto(clubId, "Club",
                 8L, 4L, 2L, 14L, 9L);
 
-        Mockito.when(clubService.getClubStats(8L)).thenReturn(mockStats);
+        Mockito.when(clubService.getClubStats(8L, null, null)).thenReturn(mockStats);
 
         mockMvc.perform(get("/clubs/8/stats"))
                 .andExpect(status().isOk())

@@ -247,9 +247,9 @@ public class ClubServiceTest {
         ClubEntity gremio = ClubMockUtils.gremio();
 
         Mockito.when(clubRepository.findById(clubId)).thenReturn(Optional.of(gremio));
-        Mockito.when(matchRepository.getClubStats(clubId)).thenReturn(mockStats);
+        Mockito.when(matchRepository.getClubStats(clubId, null, null)).thenReturn(mockStats);
 
-        ClubStatsResponseDto result = clubService.getClubStats(clubId);
+        ClubStatsResponseDto result = clubService.getClubStats(clubId, null, null);
 
         Assertions.assertEquals(8, result.getTotalLosses());
         Assertions.assertEquals("Grêmio", result.getClubName());

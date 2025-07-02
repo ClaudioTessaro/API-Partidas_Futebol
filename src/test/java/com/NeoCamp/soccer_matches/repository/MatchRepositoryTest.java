@@ -108,7 +108,7 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldCalculateClubStats() {
-        ClubStatsResponseDto clubStats = matchRepository.getClubStats(gremioId);
+        ClubStatsResponseDto clubStats = matchRepository.getClubStats(gremioId, null, null);
 
         Assertions.assertEquals("Grêmio", clubStats.getClubName());
         Assertions.assertEquals(1, clubStats.getTotalWins());
