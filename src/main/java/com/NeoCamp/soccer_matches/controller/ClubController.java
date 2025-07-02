@@ -1,10 +1,8 @@
 package com.neocamp.soccer_matches.controller;
 
-import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
-import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
-import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
-import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
+import com.neocamp.soccer_matches.dto.club.*;
 import com.neocamp.soccer_matches.dto.match.HeadToHeadResponseDto;
+import com.neocamp.soccer_matches.enums.RankingOrder;
 import com.neocamp.soccer_matches.enums.MatchFilter;
 import com.neocamp.soccer_matches.service.ClubService;
 import jakarta.validation.Valid;
@@ -64,6 +62,12 @@ public class ClubController {
             @RequestParam(required = false) MatchFilter filter) {
         HeadToHeadResponseDto headToHeadStats = clubService.getHeadToHeadStats(clubId, opponentId, filter);
         return ResponseEntity.status(HttpStatus.OK).body(headToHeadStats);
+    }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<ClubRankingDto>>  getClubRanking(RankingOrder rankingOrder) {
+        List<ClubRankingDto> ranking = clubService.getClubRanking(rankingOrder);
+        return ResponseEntity.status(HttpStatus.OK).body(ranking);
     }
 
     @PostMapping
