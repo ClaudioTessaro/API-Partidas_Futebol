@@ -1,5 +1,6 @@
 package com.neocamp.soccer_matches.repository;
 
+import com.neocamp.soccer_matches.dto.club.ClubRankingDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.entity.MatchEntity;
@@ -124,4 +125,111 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
             @Param("isRout") Boolean isRout,
             @Param("isHome") Boolean isHome,
             @Param("isAway") Boolean isAway);
+
+    @Query("""
+        SELECT new com.neocamp.soccer_matches.dto.club.ClubRankingDto(
+            c.id,
+            c.name,
+            COUNT(m.id),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 1 ELSE 0 END),
+            SUM(CASE WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id)
+                THEN 1 ELSE 0 END),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals < m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals < m.homeGoals) THEN 1 ELSE 0 END),
+            SUM(CASE WHEN m.homeClub.id = c.id THEN m.homeGoals ELSE m.awayGoals END),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 3
+                WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id) THEN 1
+                ELSE 0 END)
+        )
+        FROM ClubEntity c
+        JOIN MatchEntity m ON c.id = m.homeClub.id OR c.id = m.awayClub.id
+        GROUP BY c.id, c.name
+        ORDER BY COUNT (m.id) DESC
+""")
+    List<ClubRankingDto> getClubRankingByTotalMatches();
+
+    @Query("""
+        SELECT new com.neocamp.soccer_matches.dto.club.ClubRankingDto(
+            c.id,
+            c.name,
+            COUNT(m.id),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 1 ELSE 0 END),
+            SUM(CASE WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id)
+                THEN 1 ELSE 0 END),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals < m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals < m.homeGoals) THEN 1 ELSE 0 END),
+            SUM(CASE WHEN m.homeClub.id = c.id THEN m.homeGoals ELSE m.awayGoals END),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 3
+                WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id) THEN 1
+                ELSE 0 END)
+        )
+        FROM ClubEntity c
+        JOIN MatchEntity m ON c.id = m.homeClub.id OR c.id = m.awayClub.id
+        GROUP BY c.id, c.name
+        HAVING SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 1 ELSE 0 END) > 0
+        ORDER BY SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 1 ELSE 0 END) DESC
+""")
+    List<ClubRankingDto> getClubRankingByTotalWins();
+
+    @Query("""
+        SELECT new com.neocamp.soccer_matches.dto.club.ClubRankingDto(
+            c.id,
+            c.name,
+            COUNT(m.id),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 1 ELSE 0 END),
+            SUM(CASE WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id)
+                THEN 1 ELSE 0 END),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals < m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals < m.homeGoals) THEN 1 ELSE 0 END),
+            SUM(CASE WHEN m.homeClub.id = c.id THEN m.homeGoals ELSE m.awayGoals END),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 3
+                WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id) THEN 1
+                ELSE 0 END)
+        )
+        FROM ClubEntity c
+        JOIN MatchEntity m ON c.id = m.homeClub.id OR c.id = m.awayClub.id
+        GROUP BY c.id, c.name
+        HAVING SUM(CASE WHEN m.homeClub.id = c.id THEN m.homeGoals ELSE m.awayGoals END) > 0
+        ORDER BY SUM(CASE WHEN m.homeClub.id = c.id THEN m.homeGoals ELSE m.awayGoals END) DESC
+""")
+    List<ClubRankingDto> getClubRankingByTotalGoals();
+
+    @Query("""
+        SELECT new com.neocamp.soccer_matches.dto.club.ClubRankingDto(
+            c.id,
+            c.name,
+            COUNT(m.id),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 1 ELSE 0 END),
+            SUM(CASE WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id)
+                THEN 1 ELSE 0 END),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals < m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals < m.homeGoals) THEN 1 ELSE 0 END),
+            SUM(CASE WHEN m.homeClub.id = c.id THEN m.homeGoals ELSE m.awayGoals END),
+            SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 3
+                WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id) THEN 1
+                ELSE 0 END)
+        )
+        FROM ClubEntity c
+        JOIN MatchEntity m ON c.id = m.homeClub.id OR c.id = m.awayClub.id
+        GROUP BY c.id, c.name
+        HAVING SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                    OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 3
+                   WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id) THEN 1
+                   ELSE 0 END) > 0
+        ORDER BY SUM(CASE WHEN (m.homeClub.id = c.id AND m.homeGoals > m.awayGoals)
+                      OR (m.awayClub.id = c.id AND m.awayGoals > m.homeGoals) THEN 3
+                      WHEN m.homeGoals = m.awayGoals AND (m.homeClub.id = c.id OR m.awayClub.id = c.id) THEN 1
+                      ELSE 0 END) DESC
+""")
+    List<ClubRankingDto> getClubRankingByTotalPoints();
 }

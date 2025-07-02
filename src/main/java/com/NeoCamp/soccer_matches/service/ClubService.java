@@ -1,14 +1,12 @@
 package com.neocamp.soccer_matches.service;
 
-import com.neocamp.soccer_matches.dto.club.ClubRequestDto;
-import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
-import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
-import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
+import com.neocamp.soccer_matches.dto.club.*;
 import com.neocamp.soccer_matches.dto.match.HeadToHeadResponseDto;
 import com.neocamp.soccer_matches.dto.match.MatchResponseDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.MatchEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.enums.RankingOrder;
 import com.neocamp.soccer_matches.enums.MatchFilter;
 import com.neocamp.soccer_matches.enums.StateCode;
 import com.neocamp.soccer_matches.exception.BusinessException;
@@ -22,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,6 +109,18 @@ public class ClubService {
         List<MatchResponseDto> matches = matchEntities.stream().map(matchMapper::toDto).collect(Collectors.toList());
 
         return new HeadToHeadResponseDto(stats, matches);
+    }
+
+    public List<ClubRankingDto> getClubRanking(RankingOrder rankingOrder) {
+        List<ClubRankingDto> ranking = new ArrayList<>();
+
+        switch (rankingOrder) {
+            case MATCHES -> ranking = matchRepository.getClubRankingByTotalMatches();
+            case WINS -> ranking = matchRepository.getClubRankingByTotalWins();
+            case GOALS -> ranking = matchRepository.getClubRankingByTotalGoals();
+            case POINTS -> ranking = matchRepository.getClubRankingByTotalPoints();
+        }
+        return ranking;
     }
 
     public ClubResponseDto save(ClubRequestDto clubRequestDto) {
