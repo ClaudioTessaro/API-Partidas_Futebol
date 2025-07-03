@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.configuration;
+package com.neocamp.soccer_matches.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

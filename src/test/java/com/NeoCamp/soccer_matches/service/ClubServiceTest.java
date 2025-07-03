@@ -6,6 +6,7 @@ import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.enums.MatchFilter;
 import com.neocamp.soccer_matches.enums.StateCode;
 import com.neocamp.soccer_matches.exception.BusinessException;
 import com.neocamp.soccer_matches.mapper.ClubMapper;
@@ -110,15 +111,15 @@ public class ClubServiceTest {
 
         Page<ClubEntity> clubs = new PageImpl<>(List.of(gremioEntity), pageable, 1);
 
-        Mockito.when(clubRepository.listClubsByFilters(null, rs,  null, pageable ))
+        Mockito.when(clubRepository.listClubsByFilters(null, StateCode.RS,  null, pageable ))
                 .thenReturn(clubs);
         Mockito.when(clubMapper.toDto(gremioEntity)).thenReturn(gremioResponseDto);
 
-        Page<ClubResponseDto> result = clubService.listClubsByFilters(null, "RS", null, pageable);
+        Page<ClubResponseDto> result = clubService.listClubsByFilters(null, StateCode.RS, null, pageable);
 
         Assertions.assertEquals(1, result.getTotalElements());
         Assertions.assertEquals("Grêmio", result.getContent().getFirst().getName());
-        Assertions.assertEquals("RS", result.getContent().getFirst().getHomeState().getCode());
+        Assertions.assertEquals(StateCode.RS, result.getContent().getFirst().getHomeState().getCode());
     }
 
     @Test
@@ -146,15 +147,15 @@ public class ClubServiceTest {
 
         Page<ClubEntity> clubs = new PageImpl<>(List.of(gremioEntity), pageable, 1);
 
-        Mockito.when(clubRepository.listClubsByFilters(null, rs, true, pageable))
+        Mockito.when(clubRepository.listClubsByFilters(null, StateCode.AM, true, pageable))
                 .thenReturn(clubs);
         Mockito.when(clubMapper.toDto(gremioEntity)).thenReturn(gremioResponseDto);
 
-        Page<ClubResponseDto> result = clubService.listClubsByFilters(null, "RS", true, pageable);
+        Page<ClubResponseDto> result = clubService.listClubsByFilters(null, StateCode.RS, true, pageable);
 
         Assertions.assertEquals(1, result.getTotalElements());
         Assertions.assertEquals("Grêmio", result.getContent().getFirst().getName());
-        Assertions.assertEquals("RS", result.getContent().getFirst().getHomeState().getCode());
+        Assertions.assertEquals(StateCode.RS, result.getContent().getFirst().getHomeState().getCode());
     }
 
     @Test
@@ -165,11 +166,11 @@ public class ClubServiceTest {
 
         Page<ClubEntity> clubs = new PageImpl<>(List.of(flamengoEntity), pageable, 1);
 
-        Mockito.when(clubRepository.listClubsByFilters("Flamengo", rj, true, pageable))
+        Mockito.when(clubRepository.listClubsByFilters("Flamengo", StateCode.RJ, true, pageable))
                 .thenReturn(clubs);
         Mockito.when(clubMapper.toDto(flamengoEntity)).thenReturn(flamengoResponseDto);
 
-        Page<ClubResponseDto> result = clubService.listClubsByFilters("Flamengo", "RJ",
+        Page<ClubResponseDto> result = clubService.listClubsByFilters("Flamengo", StateCode.RJ,
                 true, pageable);
 
         Assertions.assertEquals(1, result.getTotalElements());
@@ -202,7 +203,7 @@ public class ClubServiceTest {
 
         Assertions.assertEquals("Grêmio", result.getName());
         Assertions.assertEquals(10L, result.getId());
-        Assertions.assertEquals("RS", result.getHomeState().getCode());
+        Assertions.assertEquals(StateCode.RS, result.getHomeState().getCode());
     }
 
     @Test
@@ -247,7 +248,7 @@ public class ClubServiceTest {
         ClubEntity gremio = ClubMockUtils.gremio();
 
         Mockito.when(clubRepository.findById(clubId)).thenReturn(Optional.of(gremio));
-        Mockito.when(matchRepository.getClubStats(clubId, null, null)).thenReturn(mockStats);
+        Mockito.when(matchRepository.getClubStats(clubId, MatchFilter.AWAY.getValue())).thenReturn(mockStats);
 
         ClubStatsResponseDto result = clubService.getClubStats(clubId, null);
 
@@ -292,7 +293,7 @@ public class ClubServiceTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(12L, result.getId());
         Assertions.assertEquals("Grêmio", result.getName());
-        Assertions.assertEquals("RS", result.getHomeState().getCode());
+        Assertions.assertEquals(StateCode.RS, result.getHomeState().getCode());
     }
 
     @Test

@@ -1,8 +1,10 @@
-package com.NeoCamp.soccer_matches.dto;
+package com.neocamp.soccer_matches.dto;
+
+import lombok.Data;
 
 import java.util.List;
 
-public record IaResponse(
-        List<ChanceVitoriaResponse> response
-) {
+@Data
+public class IaResponse {
+    private List<ChatChoice> choices;
 }

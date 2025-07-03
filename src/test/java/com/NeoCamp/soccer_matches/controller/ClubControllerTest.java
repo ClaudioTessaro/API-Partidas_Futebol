@@ -6,6 +6,7 @@ import com.neocamp.soccer_matches.dto.club.ClubResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.dto.state.StateResponseDto;
+import com.neocamp.soccer_matches.enums.StateCode;
 import com.neocamp.soccer_matches.service.ClubService;
 import com.neocamp.soccer_matches.testUtils.ClubMockUtils;
 import com.neocamp.soccer_matches.testUtils.StateMockUtils;
@@ -83,7 +84,7 @@ public class ClubControllerTest {
 
         Page<ClubResponseDto> clubs = new PageImpl<>(List.of(corinthiansDto), pageable, 1);
 
-        Mockito.when(clubService.listClubsByFilters(null, "SP", null, pageable))
+        Mockito.when(clubService.listClubsByFilters(null, StateCode.SP, null, pageable))
                 .thenReturn(clubs);
 
         mockMvc.perform(get("/clubs")
@@ -120,7 +121,7 @@ public class ClubControllerTest {
 
         Page<ClubResponseDto> clubs = new PageImpl<>(List.of(corinthiansDto), pageable, 1);
 
-        Mockito.when(clubService.listClubsByFilters("cor", "SP", true, pageable))
+        Mockito.when(clubService.listClubsByFilters("cor", StateCode.SP, true, pageable))
                 .thenReturn(clubs);
 
         mockMvc.perform(get("/clubs")
@@ -138,7 +139,7 @@ public class ClubControllerTest {
     public void shouldReturn200AndEmptyList_whenInvalidStateCode() throws Exception {
         Page<ClubResponseDto> emptyClubs = new PageImpl<>(List.of(), pageable, 0);
 
-        Mockito.when(clubService.listClubsByFilters(null, "XX", null, pageable))
+        Mockito.when(clubService.listClubsByFilters(null, StateCode.valueOf("XX"), null, pageable))
                 .thenReturn(emptyClubs);
 
         mockMvc.perform(get("/clubs")

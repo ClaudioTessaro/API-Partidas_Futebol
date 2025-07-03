@@ -6,16 +6,13 @@ spring:
     properties:
       hibernate:
         use-new-id-generator-mappings: false
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://repmais-sandbox.clwanagaul5u.us-east-1.rds.amazonaws.com:3306/api-futebol
-    username: repmais
-    password: YmO4EEcaqWeIGi3CF1WS
-  config:
-    import: optional:classpath:env.properties
-    activate:
-      on-profile: dev
 
-gtp:
-  secret-key: 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
+gpt:
+  secretKey:
   url: https://api.openai.com/v1/chat/completions
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

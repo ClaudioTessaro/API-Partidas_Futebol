@@ -6,6 +6,7 @@ import com.neocamp.soccer_matches.entity.ClubEntity;
 import com.neocamp.soccer_matches.entity.MatchEntity;
 import com.neocamp.soccer_matches.entity.StadiumEntity;
 import com.neocamp.soccer_matches.entity.StateEntity;
+import com.neocamp.soccer_matches.enums.MatchFilter;
 import com.neocamp.soccer_matches.enums.StateCode;
 import com.neocamp.soccer_matches.testUtils.StateTestUtils;
 import org.junit.jupiter.api.Assertions;
@@ -110,7 +111,7 @@ public class MatchRepositoryTest {
 
     @Test
     public void shouldCalculateClubStats() {
-        ClubStatsResponseDto clubStats = matchRepository.getClubStats(gremioId, null, null);
+        ClubStatsResponseDto clubStats = matchRepository.getClubStats(gremioId, MatchFilter.AWAY.getValue());
 
         Assertions.assertEquals("Grêmio", clubStats.getClubName());
         Assertions.assertEquals(1, clubStats.getTotalWins());

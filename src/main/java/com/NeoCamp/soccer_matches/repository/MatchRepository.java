@@ -4,6 +4,8 @@ import com.neocamp.soccer_matches.dto.club.ClubRankingDto;
 import com.neocamp.soccer_matches.dto.club.ClubStatsResponseDto;
 import com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto;
 import com.neocamp.soccer_matches.entity.MatchEntity;
+import com.neocamp.soccer_matches.enums.MatchFilter;
+import com.neocamp.soccer_matches.enums.RankingOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -47,14 +49,17 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
                      WHEN m.awayClub.id = :id THEN m.homeGoals ELSE 0 END)
         )
         FROM MatchEntity m
-        WHERE (m.homeClub.id = :id OR m.awayClub.id = :id)
-        AND (:isHome IS NULL OR (m.homeClub.id = :id AND :isHome = TRUE))
-        AND (:isAway IS NULL OR (m.awayClub.id = :id AND :isAway = TRUE))
+        LEFT JOIN m.awayClub away
+        LEFT JOIN m.homeClub home
+        WHERE (away.id = :id OR home.id = :id)
+        AND (:matchFilter IS NULL OR
+              (:matchFilter = 'HOME' AND m.homeClub.id = :id) OR
+              (:matchFilter = 'AWAY' AND m.awayClub.id = :id) OR 
+              (:matchFilter = 'ROUT' ))
     """)
     ClubStatsResponseDto getClubStats(
             @Param("id") Long id,
-            @Param("isHome") Boolean isHome,
-            @Param("isAway") Boolean isAway);
+            @Param("matchFilter") String matchFilter);
 
     @Query("""
         SELECT new com.neocamp.soccer_matches.dto.club.ClubVersusClubStatsDto(

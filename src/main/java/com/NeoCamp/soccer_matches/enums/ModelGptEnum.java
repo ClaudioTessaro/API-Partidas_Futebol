@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.enums;
+package com.neocamp.soccer_matches.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

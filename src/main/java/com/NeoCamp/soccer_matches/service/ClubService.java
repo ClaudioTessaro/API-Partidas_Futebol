@@ -33,13 +33,8 @@ public class ClubService {
     private final MatchMapper matchMapper;
     private final MatchRepository matchRepository;
 
-    public Page<ClubResponseDto> listClubsByFilters(String name, String stateCode, Boolean active, Pageable pageable) {
-        StateEntity homeState = null;
-        if (stateCode != null) {
-            homeState = stateService.findByCode(StateCode.valueOf(stateCode.toUpperCase()));
-        }
-
-        Page<ClubEntity> clubs = clubRepository.listClubsByFilters(name, homeState, active, pageable);
+    public Page<ClubResponseDto> listClubsByFilters(String name, StateCode stateCode, Boolean active, Pageable pageable) {
+        Page<ClubEntity> clubs = clubRepository.listClubsByFilters(name, stateCode, active, pageable);
         return clubs.map(clubMapper::toDto);
     }
 
@@ -54,20 +49,24 @@ public class ClubService {
                 .orElseThrow(() -> new EntityNotFoundException("Club not found: " + id));
     }
 
+    public ClubStatsResponseDto getClubStats(String name,  MatchFilter filter){
+        ClubEntity club = clubRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Club not found: " + name));
+        return getClubStats(club.getId(), filter);
+    }
+
     public ClubStatsResponseDto getClubStats(Long id, MatchFilter filter) {
-        findEntityById(id);
-
-        Boolean isHome = null;
-        Boolean isAway = null;
-
-        if (filter != null) {
-            switch (filter) {
-                case HOME ->  isHome = true;
-                case AWAY -> isAway = true;
-                case ROUT -> throw new BusinessException("Filter rout is not supported for this endpoint");
-            }
+        validateIfClubExists(id);
+        if (MatchFilter.ROUT.equals(filter)) {
+            throw new BusinessException("Filter rout is not supported for this endpoint");
         }
-        return matchRepository.getClubStats(id, isHome, isAway);
+        return matchRepository.getClubStats(id, filter.getValue());
+    }
+
+    private void validateIfClubExists(Long id) {
+        if (!clubRepository.existsById(id)) {
+            throw new BusinessException("clube nao existe");
+        }
     }
 
     public List<ClubVersusClubStatsDto> getClubVersusOpponentsStats(Long id, MatchFilter filter) {
@@ -138,7 +137,6 @@ public class ClubService {
 
         validateStateCode(clubRequestDto.getStateCode());
         StateEntity state = stateService.findByCode(StateCode.valueOf(clubRequestDto.getStateCode()));
-
         club.setName(clubRequestDto.getName());
         club.setHomeState(state);
         club.setCreationDate(clubRequestDto.getCreationDate());

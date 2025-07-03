@@ -1,4 +1,4 @@
-package com.NeoCamp.soccer_matches.dto;
+package com.neocamp.soccer_matches.dto;
 
 public record ChanceVitoriaResponse(
         String teamName,
